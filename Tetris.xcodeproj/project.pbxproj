@@ -19,6 +19,9 @@
 		BC03B9DE1C1365F400DE2A99 /* CoreTetris.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */; };
 		BC03B9DF1C1365F400DE2A99 /* CoreTetris.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */; };
+		BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */; };
+		BC03B9EC1C139C4100DE2A99 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9EB1C139C4100DE2A99 /* Assertions.swift */; };
+		BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9ED1C139C6800DE2A99 /* Math.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +87,9 @@
 		BC03B9D91C1365F400DE2A99 /* CoreTetrisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTetrisTests.swift; sourceTree = "<group>"; };
 		BC03B9DB1C1365F400DE2A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tetrimino.swift; sourceTree = "<group>"; };
+		BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TetriminoTests.swift; path = CoreTetrisTests/TetriminoTests.swift; sourceTree = SOURCE_ROOT; };
+		BC03B9EB1C139C4100DE2A99 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
+		BC03B9ED1C139C6800DE2A99 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,8 +173,10 @@
 		BC03B9CA1C1365F400DE2A99 /* CoreTetris */ = {
 			isa = PBXGroup;
 			children = (
+				BC03B9EB1C139C4100DE2A99 /* Assertions.swift */,
 				BC03B9CB1C1365F400DE2A99 /* CoreTetris.h */,
 				BC03B9CD1C1365F400DE2A99 /* Info.plist */,
+				BC03B9ED1C139C6800DE2A99 /* Math.swift */,
 				BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */,
 			);
 			path = CoreTetris;
@@ -178,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				BC03B9D91C1365F400DE2A99 /* CoreTetrisTests.swift */,
+				BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */,
 				BC03B9DB1C1365F400DE2A99 /* Info.plist */,
 			);
 			path = CoreTetrisTests;
@@ -374,7 +383,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC03B9EC1C139C4100DE2A99 /* Assertions.swift in Sources */,
 				BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */,
+				BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC03B9DA1C1365F400DE2A99 /* CoreTetrisTests.swift in Sources */,
+				BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

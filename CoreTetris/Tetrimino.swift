@@ -1,32 +1,15 @@
+public typealias TetriminoPoints = Set<Point>
 
-func ==(left: Point, right: Point) -> Bool {
-    return left.x == right.x && left.y == right.y
+public func ==(left: Color, right: Color) -> Bool {
+    return left.alpha == right.alpha && left.red == right.red && left.green == right.green && left.blue == right.blue
 }
 
-struct Point: Hashable {
-    let x: Int
-    let y: Int
-    
-    var hashValue: Int {
-        return self.x ^ self.y << 16
-    }
-}
-
-// TODO: Set<Point>
-typealias TetriminoPoints = (Point, Point, Point, Point)
-
-// Remainder operator has same properties as modulo
-infix operator %% { associativity left precedence 150 }
-func %%(left: Int, right: Int) -> Int {
-    return (((left % right) + right) % right)
-}
-
-struct Color {
-    let alpha: Double
-    let red: Double
-    let green: Double
-    let blue: Double
-    init(alpha: Int = 0, red: Int, green: Int, blue: Int) {
+public struct Color {
+    public let alpha: Double
+    public let red: Double
+    public let green: Double
+    public let blue: Double
+    public init(alpha: Int = 0, red: Int, green: Int, blue: Int) {
         precondition(alpha >= 0 && alpha < 256)
         precondition(red >= 0 && red < 256)
         precondition(green >= 0 && green < 256)
@@ -37,244 +20,320 @@ struct Color {
         self.green = Double(green) / 255
         self.blue = Double(blue) / 255
     }
-    init(argb: Int32) {
-        let alpha = Int(argb & (0xFF << 24))
-        let red   = Int(argb & (0xFF << 16))
-        let green = Int(argb & (0xFF << 8))
-        let blue  = Int(argb & (0xFF << 0))
+    public init(argb: Int32) {
+        let alpha = Int((argb & (0xFF << 24)) >> 24)
+        let red   = Int((argb & (0xFF << 16)) >> 16)
+        let green = Int((argb & (0xFF << 8))  >> 8)
+        let blue  = Int((argb & (0xFF << 0))  >> 0)
         self.init(alpha: alpha, red: red, green: green, blue: blue)
     }
 }
 
-enum TetriminoShape {
+public enum TetriminoShape {
     case I, O, T, J, L, S, Z
-    func points(rotation: Int = 0) -> TetriminoPoints {
+    
+    public static let allValues: [TetriminoShape] = [.I, .O, .T, .J, .L, .S, .Z]
+    
+    public func points(rotation: Int = 0) -> TetriminoPoints {
+        var reducedRotation = rotation
+        recoverableAssert(rotation >= 0 && rotation < 4) {
+            reducedRotation = rotation %% 4
+        }
+        
         // Note: All ASCII art diagrams are using the lower left as (0,0)
         let result: TetriminoPoints
         switch self {
         case I:
-            switch rotation %% 4 {
+            switch reducedRotation {
             case 0:
-                /********/
-                /**    **/
-                /**XXXX**/
-                /**    **/
-                /**    **/
-                /********/
-                result = (Point(x:0, y:2), Point(x:1, y:2), Point(x:2, y:2), Point(x:3, y:2))
+                // 3
+                // 2XXXX
+                // 1    
+                // 0    
+                // +0123
+                result = [
+
+                    Point(x:0, y:2), Point(x:1, y:2), Point(x:2, y:2), Point(x:3, y:2)
+
+
+                ]
             case 1:
-                /********/
-                /**  X **/
-                /**  X **/
-                /**  X **/
-                /**  X **/
-                /********/
-                result = (Point(x:2, y:0), Point(x:2, y:1), Point(x:2, y:2), Point(x:2, y:3))
+                // 3  X 
+                // 2  X 
+                // 1  X 
+                // 0  X 
+                // +0123
+                result = [
+                                                      Point(x:2, y:3),
+                                                      Point(x:2, y:2),
+                                                      Point(x:2, y:1),
+                                                      Point(x:2, y:0)
+                ]
             case 2:
-                /********/
-                /**    **/
-                /**    **/
-                /**XXXX**/
-                /**    **/
-                /********/
-                result = (Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1), Point(x:3, y:1))
+                // 3    
+                // 2    
+                // 1XXXX
+                // 0    
+                // +0123
+                result = [
+                    
+                    
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1), Point(x:3, y:1)
+                
+                ]
             case 3:
-                /********/
-                /** X  **/
-                /** X  **/
-                /** X  **/
-                /** X  **/
-                /********/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 3 X
+                // 2 X  
+                // 1 X  
+                // 0 X  
+                // +0123
+                result = [
+                                     Point(x:1, y:3),
+                                     Point(x:1, y:2),
+                                     Point(x:1, y:1),
+                                     Point(x:1, y:0)
+                ]
             default:
                 preconditionFailure()
             }
         case O:
-            /********/
-            /** XX **/
-            /** XX **/
-            /**    **/
-            /********/
-            result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+            /*2 XX */
+            /*1 XX */
+            /*0    */
+            /**0123*/
+            result = [
+                                 Point(x:1, y:2), Point(x:2, y:2),
+                                 Point(x:1, y:1), Point(x:2, y:1)
+            ]
         case T:
-            switch rotation %% 4 {
+            switch reducedRotation {
             case 0:
-                /*******/
-                /** X **/
-                /**XXX**/
-                /**   **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 X 
+                // 1XXX
+                // 0   
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1)
+                ]
             case 1:
-                /*******/
-                /** X **/
-                /** XX**/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
-
-            
+                // 2 X 
+                // 1 XX
+                // 0 X 
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                                     Point(x:1, y:1), Point(x:2, y:1),
+                                     Point(x:1, y:0)
+                ]
             case 2:
-                /*******/
-                /**   **/
-                /**XXX**/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2   
+                // 1XXX
+                // 0 X 
+                // +012
+                result = [
+                    
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1),
+                                     Point(x:1, y:0)
+                ]
             case 3:
-                /********/
-                /** X **/
-                /**XX **/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 X
+                // 1XX 
+                // 0 X 
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1),
+                                     Point(x:1, y:0)
+                ]
             default:
                 preconditionFailure()
             }
         case J:
-            switch rotation %% 4 {
+            switch reducedRotation %% 4 {
             case 0:
-                /*******/
-                /**X  **/
-                /**XXX**/
-                /**   **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2X  
+                // 1XXX
+                // 0   
+                // +012
+                result = [
+                    Point(x:0, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1)
+                    
+                ]
             case 1:
-                /*******/
-                /** XX**/
-                /** X **/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 XX
+                // 1 X 
+                // 0 X 
+                // +012
+                result = [
+                                     Point(x:1, y:2), Point(x:2, y:2),
+                                     Point(x:1, y:1),
+                                     Point(x:1, y:0)
+                ]
             case 2:
-                /*******/
-                /**   **/
-                /**XXX**/
-                /**  X**/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2   
+                // 1XXX
+                // 0  X
+                // +012
+                result = [
+                    
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1),
+                                                      Point(x:2, y:0)
+                ]
             case 3:
-                /*******/
-                /** X **/
-                /** X **/
-                /**XX **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 X
+                // 1 X 
+                // 0XX 
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                                     Point(x:1, y:1),
+                    Point(x:0, y:0), Point(x:1, y:0)
+                ]
             default:
                 preconditionFailure()
             }
         case L:
-            switch rotation %% 4 {
+            switch reducedRotation {
             case 0:
-                /*******/
-                /**  X**/
-                /**XXX**/
-                /**   **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2  X
+                // 1XXX
+                // 0   
+                // +012
+                result = [
+                                                      Point(x:2, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1)
+                    
+                ]
             case 1:
-                /*******/
-                /** X **/
-                /** X **/
-                /** XX**/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 X 
+                // 1 X 
+                // 0 XX
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                                     Point(x:1, y:1),
+                                     Point(x:1, y:0), Point(x:2, y:0)
+                ]
             case 2:
-                /*******/
-                /**   **/
-                /**XXX**/
-                /**X  **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2   
+                // 1XXX
+                // 0X  
+                // +012
+                result = [
+                    
+                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1),
+                    Point(x:0, y:0)
+                ]
             case 3:
-                /*******/
-                /**XX **/
-                /** X **/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2XX
+                // 1 X 
+                // 0 X 
+                // +012
+                result = [
+                    Point(x:0, y:2), Point(x:1, y:2),
+                                     Point(x:1, y:1),
+                                     Point(x:1, y:0)
+                ]
             default:
                 preconditionFailure()
             }
         case S:
-            switch rotation %% 4 {
+            switch reducedRotation {
             case 0:
-                /*******/
-                /** XX**/
-                /**XX **/
-                /**   **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 XX
+                // 1XX 
+                // 0   
+                // +012
+                result = [
+                                     Point(x:1, y:2), Point(x:2, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1)
+
+                ]
             case 1:
-                /*******/
-                /** X **/
-                /** XX**/
-                /**  X**/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 X 
+                // 1 XX
+                // 0  X
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                                     Point(x:1, y:1), Point(x:2, y:1),
+                                                      Point(x:2, y:0)
+                ]
             case 2:
-                /*******/
-                /**   **/
-                /** XX**/
-                /**XX **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2   
+                // 1 XX
+                // 0XX 
+                // +012
+                result = [
+                    
+                                     Point(x:1, y:1), Point(x:2, y:1),
+                    Point(x:0, y:0), Point(x:1, y:0)
+                ]
             case 3:
-                /*******/
-                /**X  **/
-                /**XX **/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2X
+                // 1XX 
+                // 0 X 
+                // +012
+                result = [
+                    Point(x:0, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1),
+                                     Point(x:1, y:0)
+                ]
             default:
                 preconditionFailure()
             }
         case Z:
-            switch rotation %% 4 {
+            switch reducedRotation {
             case 0:
-                /*******/
-                /**XX **/
-                /** XX**/
-                /**   **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2XX 
+                // 1 XX
+                // 0   
+                // +012
+                result = [
+                    Point(x:0, y:2), Point(x:1, y:2),
+                                     Point(x:1, y:1), Point(x:2, y:1)
+                    
+                ]
             case 1:
-                /*******/
-                /**  X**/
-                /** XX**/
-                /** X **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2  X
+                // 1 XX
+                // 0 X 
+                // +012
+                result = [
+                                                      Point(x:2, y:2),
+                                     Point(x:1, y:1), Point(x:2, y:1),
+                                     Point(x:1, y:0)
+                ]
             case 2:
-                /*******/
-                /**   **/
-                /**XX **/
-                /** XX**/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2   
+                // 1XX 
+                // 0 XX
+                // +012
+                result = [
+
+                    Point(x:0, y:1), Point(x:1, y:1),
+                                     Point(x:1, y:0), Point(x:2, y:0)
+                ]
             case 3:
-                /*******/
-                /** X **/
-                /**XX **/
-                /**X  **/
-                /*******/
-                result = (Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0), Point(x:0, y:0))
+                // 2 X
+                // 1XX 
+                // 0X  
+                // +012
+                result = [
+                                     Point(x:1, y:2),
+                    Point(x:0, y:1), Point(x:1, y:1),
+                    Point(x:0, y:0)
+                ]
             default:
                 preconditionFailure()
             }
         }
-        // TODO: TetriminoPoints -> Set<Point>, assert count == 4
-        precondition(result.0 != result.1)
-        precondition(result.0 != result.2)
-        precondition(result.0 != result.3)
-        precondition(result.1 != result.2)
-        precondition(result.1 != result.3)
-        precondition(result.2 != result.3)
         return result
     }
     
-    func color() -> Color {
+    public var color: Color { get {
         switch self {
         case I:
             // Cyan
@@ -298,29 +357,98 @@ enum TetriminoShape {
             // Red
             return Color(argb: 0xE1272A)
         }
-    }
+    }}
 }
 
-struct Tetrimino {
-    let shape: TetriminoShape
+public func ==(left: Tetrimino, right: Tetrimino) -> Bool {
+    return left.shape == right.shape && left.points == right.points
+}
+
+public struct Tetrimino: Equatable {
+    public let shape: TetriminoShape
 
     private let rotation: Int
 
-    init(shape: TetriminoShape) {
-        self.init(shape: shape, rotation: 0)
-    }
-    
-    private init(shape: TetriminoShape, rotation: Int) {
+    public init(shape: TetriminoShape, rotation: Int = 0) {
         self.shape = shape
-        self.rotation = rotation % 4
+        self.rotation = rotation %% 4
     }
     
-    var points: TetriminoPoints { get {
+    public var points: TetriminoPoints { get {
         return self.shape.points(self.rotation)
     }}
 
-    func rotated(clockwise: Bool) -> Tetrimino {
-        let newRotation = self.rotation + (clockwise ? 1 : -1)
-        return Tetrimino(shape: self.shape, rotation: newRotation)
+    public func rotated(clockwise: Bool) -> Tetrimino {
+        switch self.shape {
+        case .O:
+            return self
+        default:
+            let newRotation = self.rotation + (clockwise ? 1 : -1)
+            return Tetrimino(shape: self.shape, rotation: newRotation)
+        }
     }
+}
+
+extension Tetrimino: CustomStringConvertible {
+    public var description: String { get {
+        var coordinates: [[Bool]]
+        let points = self.shape.points(self.rotation)
+        
+        // FIXME: there's got to be a better way to do this
+        switch self.shape {
+        case .I:
+            coordinates = [
+                [false, false, false, false],
+                [false, false, false, false],
+                [false, false, false, false],
+                [false, false, false, false]
+            ]
+        case .O:
+            coordinates = [
+                [false, false, false, false],
+                [false, false, false, false],
+                [false, false, false, false],
+            ]
+        case .T, .J, .L, .S, .Z:
+            coordinates = [
+                [false, false, false],
+                [false, false, false],
+                [false, false, false],
+            ]
+        }
+        
+        for point in points {
+            coordinates[point.y][point.x] = true
+        }
+        
+        // Header
+        var result = "+"
+        for _ in 0..<coordinates[0].count {
+            result += "-"
+        }
+        result += "+\n"
+
+        // Rows, highest to lowest
+        for i in (0..<coordinates.count).reverse() {
+            // Columnes, lowest to highest
+            result += "|"
+            for j in 0..<coordinates[i].count {
+                if (coordinates[i][j]) {
+                    result += "#"
+                } else {
+                    result += " "
+                }
+            }
+            result += "|\n"
+        }
+        
+        // Footer
+        result += "+"
+        for _ in 0..<coordinates[0].count {
+            result += "-"
+        }
+        result += "+"
+        
+        return result
+    }}
 }
