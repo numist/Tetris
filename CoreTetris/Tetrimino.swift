@@ -1,4 +1,4 @@
-public typealias TetriminoPoints = Set<Point>
+public typealias TetriminoPoints = Set<Int2D>
 
 public func ==(left: Color, right: Color) -> Bool {
     return left.alpha == right.alpha && left.red == right.red && left.green == right.green && left.blue == right.blue
@@ -34,303 +34,86 @@ public enum TetriminoShape {
     
     public static let allValues: [TetriminoShape] = [.I, .O, .T, .J, .L, .S, .Z]
     
-    public func points(rotation: Int = 0) -> TetriminoPoints {
-        var reducedRotation = rotation
-        recoverableAssert(rotation >= 0 && rotation < 4) {
-            reducedRotation = rotation %% 4
-        }
-        
-        // Note: All ASCII art diagrams are using the lower left as (0,0)
-        let result: TetriminoPoints
+    private func _points() -> TetriminoPoints {
+        // Origin is top left, y increases downward
         switch self {
         case I:
-            switch reducedRotation {
-            case 0:
-                // 3
-                // 2XXXX
-                // 1    
-                // 0    
-                // +0123
-                result = [
-
-                    Point(x:0, y:2), Point(x:1, y:2), Point(x:2, y:2), Point(x:3, y:2)
-
-
-                ]
-            case 1:
-                // 3  X 
-                // 2  X 
-                // 1  X 
-                // 0  X 
-                // +0123
-                result = [
-                                                      Point(x:2, y:3),
-                                                      Point(x:2, y:2),
-                                                      Point(x:2, y:1),
-                                                      Point(x:2, y:0)
-                ]
-            case 2:
-                // 3    
-                // 2    
-                // 1XXXX
-                // 0    
-                // +0123
-                result = [
-                    
-                    
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1), Point(x:3, y:1)
-                
-                ]
-            case 3:
-                // 3 X
-                // 2 X  
-                // 1 X  
-                // 0 X  
-                // +0123
-                result = [
-                                     Point(x:1, y:3),
-                                     Point(x:1, y:2),
-                                     Point(x:1, y:1),
-                                     Point(x:1, y:0)
-                ]
-            default:
-                preconditionFailure()
-            }
+            return [Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1), Int2D(x:3, y:1)]
         case O:
-            /*2 XX */
-            /*1 XX */
-            /*0    */
-            /**0123*/
-            result = [
-                                 Point(x:1, y:2), Point(x:2, y:2),
-                                 Point(x:1, y:1), Point(x:2, y:1)
-            ]
+            return [Int2D(x:1, y:0), Int2D(x:2, y:0), Int2D(x:1, y:1), Int2D(x:2, y:1)]
         case T:
-            switch reducedRotation {
-            case 0:
-                // 2 X 
-                // 1XXX
-                // 0   
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1)
-                ]
-            case 1:
-                // 2 X 
-                // 1 XX
-                // 0 X 
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                                     Point(x:1, y:1), Point(x:2, y:1),
-                                     Point(x:1, y:0)
-                ]
-            case 2:
-                // 2   
-                // 1XXX
-                // 0 X 
-                // +012
-                result = [
-                    
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1),
-                                     Point(x:1, y:0)
-                ]
-            case 3:
-                // 2 X
-                // 1XX 
-                // 0 X 
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1),
-                                     Point(x:1, y:0)
-                ]
-            default:
-                preconditionFailure()
-            }
+            return [Int2D(x:1, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1)]
         case J:
-            switch reducedRotation %% 4 {
-            case 0:
-                // 2X  
-                // 1XXX
-                // 0   
-                // +012
-                result = [
-                    Point(x:0, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1)
-                    
-                ]
-            case 1:
-                // 2 XX
-                // 1 X 
-                // 0 X 
-                // +012
-                result = [
-                                     Point(x:1, y:2), Point(x:2, y:2),
-                                     Point(x:1, y:1),
-                                     Point(x:1, y:0)
-                ]
-            case 2:
-                // 2   
-                // 1XXX
-                // 0  X
-                // +012
-                result = [
-                    
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1),
-                                                      Point(x:2, y:0)
-                ]
-            case 3:
-                // 2 X
-                // 1 X 
-                // 0XX 
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                                     Point(x:1, y:1),
-                    Point(x:0, y:0), Point(x:1, y:0)
-                ]
-            default:
-                preconditionFailure()
-            }
+            return [Int2D(x:0, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1)]
         case L:
-            switch reducedRotation {
-            case 0:
-                // 2  X
-                // 1XXX
-                // 0   
-                // +012
-                result = [
-                                                      Point(x:2, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1)
-                    
-                ]
-            case 1:
-                // 2 X 
-                // 1 X 
-                // 0 XX
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                                     Point(x:1, y:1),
-                                     Point(x:1, y:0), Point(x:2, y:0)
-                ]
-            case 2:
-                // 2   
-                // 1XXX
-                // 0X  
-                // +012
-                result = [
-                    
-                    Point(x:0, y:1), Point(x:1, y:1), Point(x:2, y:1),
-                    Point(x:0, y:0)
-                ]
-            case 3:
-                // 2XX
-                // 1 X 
-                // 0 X 
-                // +012
-                result = [
-                    Point(x:0, y:2), Point(x:1, y:2),
-                                     Point(x:1, y:1),
-                                     Point(x:1, y:0)
-                ]
-            default:
-                preconditionFailure()
-            }
+            return [Int2D(x:2, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1)]
         case S:
-            switch reducedRotation {
-            case 0:
-                // 2 XX
-                // 1XX 
-                // 0   
-                // +012
-                result = [
-                                     Point(x:1, y:2), Point(x:2, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1)
-
-                ]
-            case 1:
-                // 2 X 
-                // 1 XX
-                // 0  X
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                                     Point(x:1, y:1), Point(x:2, y:1),
-                                                      Point(x:2, y:0)
-                ]
-            case 2:
-                // 2   
-                // 1 XX
-                // 0XX 
-                // +012
-                result = [
-                    
-                                     Point(x:1, y:1), Point(x:2, y:1),
-                    Point(x:0, y:0), Point(x:1, y:0)
-                ]
-            case 3:
-                // 2X
-                // 1XX 
-                // 0 X 
-                // +012
-                result = [
-                    Point(x:0, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1),
-                                     Point(x:1, y:0)
-                ]
-            default:
-                preconditionFailure()
-            }
+            return [Int2D(x:1, y:0), Int2D(x:2, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1)]
         case Z:
-            switch reducedRotation {
-            case 0:
-                // 2XX 
-                // 1 XX
-                // 0   
-                // +012
-                result = [
-                    Point(x:0, y:2), Point(x:1, y:2),
-                                     Point(x:1, y:1), Point(x:2, y:1)
-                    
-                ]
-            case 1:
-                // 2  X
-                // 1 XX
-                // 0 X 
-                // +012
-                result = [
-                                                      Point(x:2, y:2),
-                                     Point(x:1, y:1), Point(x:2, y:1),
-                                     Point(x:1, y:0)
-                ]
-            case 2:
-                // 2   
-                // 1XX 
-                // 0 XX
-                // +012
-                result = [
-
-                    Point(x:0, y:1), Point(x:1, y:1),
-                                     Point(x:1, y:0), Point(x:2, y:0)
-                ]
-            case 3:
-                // 2 X
-                // 1XX 
-                // 0X  
-                // +012
-                result = [
-                                     Point(x:1, y:2),
-                    Point(x:0, y:1), Point(x:1, y:1),
-                    Point(x:0, y:0)
-                ]
-            default:
-                preconditionFailure()
-            }
+            return [Int2D(x:0, y:0), Int2D(x:1, y:0), Int2D(x:1, y:1), Int2D(x:2, y:1)]
         }
-        return result
+    }
+    
+    private func _rotationCenter() -> Double2D {
+        switch self {
+        case I:
+            return Double2D(x:1.5, y:1.5)
+        case O:
+            assertionFailure(".O does not change under rotation")
+            return Double2D(x:1.5, y:0.5)
+        case T, J, L, S, Z:
+            return Double2D(x:1, y:1)
+        }
+    }
+    
+    public func points(rotation: Int = 0) -> TetriminoPoints {
+        switch self {
+        case .O: return self._points()
+        default: ()
+        }
+        
+        let cos: Double, sin: Double
+        switch rotation %% 4 {
+        case 0:
+            return self._points()
+        case 1:
+            // 90° CW
+            sin = 1
+            cos = 0
+        case 2:
+            // 180°
+            sin = 0
+            cos = -1
+        case 3:
+            // 90° CCW
+            sin = -1
+            cos = 0
+        default:
+            preconditionFailure()
+        }
+        
+        let center = self._rotationCenter()
+        
+        // The below should have been return Set(points->map->map->map), but "Expression was too complex to be solved in reasonable time; consider breaking up the expression into distinct sub-expressions"
+
+        // 1. Convert tetrimino points to Double2D
+        let points = self._points().map { Double2D(v:$0) }
+        
+        // 2. Translate points with respect to the rotational center
+        let translatedPoints = points.map { $0 - center }
+        
+        // 3. Perform the rotation
+        // This uses a private function because the compiler was having a lot of trouble inferring types
+        func rotatePoint(v: Double2D, sin: Double, cos: Double) -> Double2D {
+            return Double2D(x:(v.x * cos) - (v.y * sin), y:(v.x * sin) + (v.y * cos))
+        }
+        let translatedRotatedPoints = translatedPoints.map { rotatePoint($0, sin: sin, cos: cos) }
+        
+        // 4. Translate points back to the origin
+        let rotatedPoints = translatedRotatedPoints.map { $0 + center }
+        
+        // 5. Convert back to Int2D
+        return Set(rotatedPoints.map { Int2D(v: $0) })
     }
     
     public var color: Color { get {
@@ -428,8 +211,8 @@ extension Tetrimino: CustomStringConvertible {
         }
         result += "+\n"
 
-        // Rows, highest to lowest
-        for i in (0..<coordinates.count).reverse() {
+        // Rows (y axis grows downward)
+        for i in 0..<coordinates.count {
             // Columnes, lowest to highest
             result += "|"
             for j in 0..<coordinates[i].count {

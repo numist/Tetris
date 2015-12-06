@@ -10,12 +10,12 @@ class TetriminoTests: XCTestCase {
         }
     }
     
-    func testTetriminosHaveFourPoints() {
-        permuteShapesAndRotations { XCTAssertEqual($0.points.count, 4) }
-    }
-    
     func testPrintingTetriminos() {
         permuteShapesAndRotations { print($0) }
+    }
+    
+    func testTetriminosHaveFourPoints() {
+        permuteShapesAndRotations { XCTAssertEqual($0.points.count, 4) }
     }
     
     func testTetriminosHaveDifferentColors() {
