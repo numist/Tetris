@@ -20,8 +20,8 @@
 		BC03B9DF1C1365F400DE2A99 /* CoreTetris.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */; };
 		BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */; };
-		BC03B9EC1C139C4100DE2A99 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9EB1C139C4100DE2A99 /* Assertions.swift */; };
 		BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9ED1C139C6800DE2A99 /* Math.swift */; };
+		BC509AA51C13C8D700B99D79 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA41C13C8D700B99D79 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,8 +88,8 @@
 		BC03B9DB1C1365F400DE2A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tetrimino.swift; sourceTree = "<group>"; };
 		BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TetriminoTests.swift; path = CoreTetrisTests/TetriminoTests.swift; sourceTree = SOURCE_ROOT; };
-		BC03B9EB1C139C4100DE2A99 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
 		BC03B9ED1C139C6800DE2A99 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		BC509AA41C13C8D700B99D79 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,7 +173,7 @@
 		BC03B9CA1C1365F400DE2A99 /* CoreTetris */ = {
 			isa = PBXGroup;
 			children = (
-				BC03B9EB1C139C4100DE2A99 /* Assertions.swift */,
+				BC509AA41C13C8D700B99D79 /* Color.swift */,
 				BC03B9CB1C1365F400DE2A99 /* CoreTetris.h */,
 				BC03B9CD1C1365F400DE2A99 /* Info.plist */,
 				BC03B9ED1C139C6800DE2A99 /* Math.swift */,
@@ -383,7 +383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC03B9EC1C139C4100DE2A99 /* Assertions.swift in Sources */,
+				BC509AA51C13C8D700B99D79 /* Color.swift in Sources */,
 				BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */,
 				BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */,
 			);
@@ -658,6 +658,7 @@
 				BC03B9C01C1365DD00DE2A99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BC03B9C11C1365DD00DE2A99 /* Build configuration list for PBXNativeTarget "TetrisTests" */ = {
 			isa = XCConfigurationList;
@@ -666,6 +667,7 @@
 				BC03B9C31C1365DD00DE2A99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BC03B9E01C1365F400DE2A99 /* Build configuration list for PBXNativeTarget "CoreTetris" */ = {
 			isa = XCConfigurationList;
@@ -674,6 +676,7 @@
 				BC03B9E21C1365F400DE2A99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BC03B9E41C1365F400DE2A99 /* Build configuration list for PBXNativeTarget "CoreTetrisTests" */ = {
 			isa = XCConfigurationList;
@@ -682,6 +685,7 @@
 				BC03B9E61C1365F400DE2A99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

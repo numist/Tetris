@@ -35,10 +35,6 @@ public struct Int2D: Hashable {
     }
 }
 
-public func ==(left: Double2D, right: Double2D) -> Bool {
-    return left.x == right.x && left.y == right.y
-}
-
 public func -(left: Double2D, right: Double2D) -> Double2D {
     return Double2D(x: left.x - right.x, y: left.y - right.y)
 }
