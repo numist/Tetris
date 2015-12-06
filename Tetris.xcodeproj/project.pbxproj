@@ -22,6 +22,10 @@
 		BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */; };
 		BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9ED1C139C6800DE2A99 /* Math.swift */; };
 		BC509AA51C13C8D700B99D79 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA41C13C8D700B99D79 /* Color.swift */; };
+		BC509AA71C13C97C00B99D79 /* TetriminoGenerators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA61C13C97C00B99D79 /* TetriminoGenerators.swift */; };
+		BC509AA91C13CE1200B99D79 /* TetriminoGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA81C13CE1200B99D79 /* TetriminoGeneratorTests.swift */; };
+		BC509AAB1C13D10D00B99D79 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AAA1C13D10D00B99D79 /* GameState.swift */; };
+		BCB687A31C14D5A700C77ACE /* MathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A21C14D5A700C77ACE /* MathTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +94,10 @@
 		BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TetriminoTests.swift; path = CoreTetrisTests/TetriminoTests.swift; sourceTree = SOURCE_ROOT; };
 		BC03B9ED1C139C6800DE2A99 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		BC509AA41C13C8D700B99D79 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		BC509AA61C13C97C00B99D79 /* TetriminoGenerators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetriminoGenerators.swift; sourceTree = "<group>"; };
+		BC509AA81C13CE1200B99D79 /* TetriminoGeneratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetriminoGeneratorTests.swift; sourceTree = "<group>"; };
+		BC509AAA1C13D10D00B99D79 /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		BCB687A21C14D5A700C77ACE /* MathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,11 +181,13 @@
 		BC03B9CA1C1365F400DE2A99 /* CoreTetris */ = {
 			isa = PBXGroup;
 			children = (
+				BC509AAA1C13D10D00B99D79 /* GameState.swift */,
 				BC509AA41C13C8D700B99D79 /* Color.swift */,
 				BC03B9CB1C1365F400DE2A99 /* CoreTetris.h */,
 				BC03B9CD1C1365F400DE2A99 /* Info.plist */,
 				BC03B9ED1C139C6800DE2A99 /* Math.swift */,
 				BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */,
+				BC509AA61C13C97C00B99D79 /* TetriminoGenerators.swift */,
 			);
 			path = CoreTetris;
 			sourceTree = "<group>";
@@ -185,6 +195,8 @@
 		BC03B9D81C1365F400DE2A99 /* CoreTetrisTests */ = {
 			isa = PBXGroup;
 			children = (
+				BCB687A21C14D5A700C77ACE /* MathTests.swift */,
+				BC509AA81C13CE1200B99D79 /* TetriminoGeneratorTests.swift */,
 				BC03B9D91C1365F400DE2A99 /* CoreTetrisTests.swift */,
 				BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */,
 				BC03B9DB1C1365F400DE2A99 /* Info.plist */,
@@ -384,6 +396,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC509AA51C13C8D700B99D79 /* Color.swift in Sources */,
+				BC509AA71C13C97C00B99D79 /* TetriminoGenerators.swift in Sources */,
+				BC509AAB1C13D10D00B99D79 /* GameState.swift in Sources */,
 				BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */,
 				BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */,
 			);
@@ -393,8 +407,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC509AA91C13CE1200B99D79 /* TetriminoGeneratorTests.swift in Sources */,
 				BC03B9DA1C1365F400DE2A99 /* CoreTetrisTests.swift in Sources */,
 				BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */,
+				BCB687A31C14D5A700C77ACE /* MathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

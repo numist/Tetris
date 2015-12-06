@@ -1,9 +1,9 @@
 public typealias TetriminoPoints = Set<Int2D>
 
-public enum TetriminoShape {
+public enum TetriminoType {
     case I, O, T, J, L, S, Z
     
-    public static let allValues: [TetriminoShape] = [.I, .O, .T, .J, .L, .S, .Z]
+    public static let allValues: [TetriminoType] = [.I, .O, .T, .J, .L, .S, .Z]
     
     private func _points() -> TetriminoPoints {
         // Origin is top left, y increases downward
@@ -69,23 +69,23 @@ public enum TetriminoShape {
         // The below should have been return Set(points->map->map->map), but "Expression was too complex to be solved in reasonable time; consider breaking up the expression into distinct sub-expressions"
 
         // 1. Convert tetrimino points to Double2D
-        let points = self._points().map { Double2D(v:$0) }
+        let points = self._points().map({ Double2D(v:$0) })
         
         // 2. Translate points with respect to the rotational center
-        let translatedPoints = points.map { $0 - center }
+        let translatedPoints = points.map({ $0 - center })
         
         // 3. Perform the rotation
         // This uses a private function because the compiler was having a lot of trouble inferring types
         func rotatePoint(v: Double2D, sin: Double, cos: Double) -> Double2D {
             return Double2D(x:(v.x * cos) - (v.y * sin), y:(v.x * sin) + (v.y * cos))
         }
-        let translatedRotatedPoints = translatedPoints.map { rotatePoint($0, sin: sin, cos: cos) }
+        let translatedRotatedPoints = translatedPoints.map({ rotatePoint($0, sin: sin, cos: cos) })
         
         // 4. Translate points back to the origin
-        let rotatedPoints = translatedRotatedPoints.map { $0 + center }
+        let rotatedPoints = translatedRotatedPoints.map({ $0 + center })
         
         // 5. Convert back to Int2D
-        return Set(rotatedPoints.map { Int2D(v: $0) })
+        return Set(rotatedPoints.map({ Int2D(v: $0) }))
     }
     
     public var color: Color { get {
@@ -106,11 +106,11 @@ public func ==(left: Tetrimino, right: Tetrimino) -> Bool {
 }
 
 public struct Tetrimino: Equatable {
-    public let shape: TetriminoShape
+    public let shape: TetriminoType
 
     private let rotation: Int
 
-    public init(shape: TetriminoShape, rotation: Int = 0) {
+    public init(shape: TetriminoType, rotation: Int = 0) {
         self.shape = shape
         self.rotation = rotation %% 4
     }
