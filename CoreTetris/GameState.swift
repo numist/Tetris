@@ -1,8 +1,8 @@
 public enum Gravity {
-    case Naïve, Sticky, Cascade
+    case Naïve //, Sticky, Cascade
 }
 
-public struct Playfield: CustomStringConvertible {
+public struct Playfield {
     public let width: Int = 10
     public let height: Int = 20
     public let cells: [Int2D:TetriminoShape]
@@ -35,45 +35,6 @@ public struct Playfield: CustomStringConvertible {
         
         return Playfield(cells: newCells)
     }
-    
-    public var description: String { get {
-        // Header
-        var result = "+"
-        for _ in 0..<self.width {
-            result += "-"
-        }
-        result += "+\n"
-        
-        // Rows (y axis grows downward)
-        for y in 0..<self.height {
-            result += "|"
-            for x in 0..<self.width {
-                if let shape = self.cells[Int2D(x: x, y: y)] {
-                    switch shape {
-                    case .I: result += "I"
-                    case .O: result += "O"
-                    case .T: result += "T"
-                    case .J: result += "J"
-                    case .L: result += "L"
-                    case .S: result += "S"
-                    case .Z: result += "Z"
-                    }
-                } else {
-                    result += " "
-                }
-            }
-            result += "|\n"
-        }
-        
-        // Footer
-        result += "+"
-        for _ in 0..<self.width {
-            result += "-"
-        }
-        result += "+"
-        
-        return result
-    } }
 }
 
 private func -(left: GamePiece, right: Int2D) -> GamePiece {
@@ -94,9 +55,13 @@ public struct GamePiece {
     public var points: TetriminoPoints { get {
         return Set(self.tetrimino.points.map({ $0 + self.position }))
     } }
-    
-    private func with(position position: Int2D? = nil, tetrimino: Tetrimino? = nil) -> GamePiece {
-        return GamePiece(tetrimino: tetrimino ?? self.tetrimino, position: position ?? self.position)
+
+    private func with(tetrimino tetrimino: Tetrimino) -> GamePiece {
+        return GamePiece(tetrimino: tetrimino, position: self.position)
+    }
+
+    private func with(position position: Int2D) -> GamePiece {
+        return GamePiece(tetrimino: self.tetrimino, position: position)
     }
 }
 
@@ -117,7 +82,6 @@ public struct GameState {
         return self.activePiece == nil
     }}
 
-    // TODO: cache result, invalidate on sideways movement, rotation, and baking
     public var ghostPiece: GamePiece? { get {
         guard var ghostPiece = activePiece else { return nil }
     
@@ -172,8 +136,6 @@ public struct GameState {
         if completedRows.count > 0 {
             switch self.gravity {
             case .Naïve: break
-            default:
-                assertionFailure("Not implemented")
             }
         }
         

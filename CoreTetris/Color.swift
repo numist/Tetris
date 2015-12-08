@@ -5,6 +5,10 @@ public func ==(left: Color, right: Color) -> Bool {
            left.blue == right.blue
 }
 
+public func !=(left: Color, right: Color) -> Bool {
+    return !(left == right)
+}
+
 public struct Color {
     public let alpha: Double
     public let red: Double

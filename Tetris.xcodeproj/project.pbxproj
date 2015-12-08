@@ -15,7 +15,6 @@
 		BC03B9BA1C1365DD00DE2A99 /* TetrisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9B91C1365DD00DE2A99 /* TetrisTests.swift */; };
 		BC03B9CC1C1365F400DE2A99 /* CoreTetris.h in Headers */ = {isa = PBXBuildFile; fileRef = BC03B9CB1C1365F400DE2A99 /* CoreTetris.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BC03B9D31C1365F400DE2A99 /* CoreTetris.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */; };
-		BC03B9DA1C1365F400DE2A99 /* CoreTetrisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9D91C1365F400DE2A99 /* CoreTetrisTests.swift */; };
 		BC03B9DE1C1365F400DE2A99 /* CoreTetris.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */; };
 		BC03B9DF1C1365F400DE2A99 /* CoreTetris.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */; };
@@ -26,8 +25,10 @@
 		BC509AA91C13CE1200B99D79 /* TetriminoGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA81C13CE1200B99D79 /* TetriminoGeneratorTests.swift */; };
 		BC509AAB1C13D10D00B99D79 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AAA1C13D10D00B99D79 /* GameState.swift */; };
 		BCB687A31C14D5A700C77ACE /* MathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A21C14D5A700C77ACE /* MathTests.swift */; };
-		BCB687A51C14D8EB00C77ACE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A41C14D8EB00C77ACE /* Types.swift */; };
+		BCB687A51C14D8EB00C77ACE /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A41C14D8EB00C77ACE /* Globals.swift */; };
 		BCB687A71C14F8B000C77ACE /* GameStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A61C14F8B000C77ACE /* GameStateTests.swift */; };
+		BCB687A91C175C4F00C77ACE /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A81C175C4F00C77ACE /* ColorTests.swift */; };
+		BCB687AB1C176D3F00C77ACE /* CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687AA1C176D3F00C77ACE /* CustomStringConvertible.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,7 +91,6 @@
 		BC03B9CB1C1365F400DE2A99 /* CoreTetris.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreTetris.h; sourceTree = "<group>"; };
 		BC03B9CD1C1365F400DE2A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC03B9D21C1365F400DE2A99 /* CoreTetrisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreTetrisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BC03B9D91C1365F400DE2A99 /* CoreTetrisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTetrisTests.swift; sourceTree = "<group>"; };
 		BC03B9DB1C1365F400DE2A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tetrimino.swift; sourceTree = "<group>"; };
 		BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TetriminoTests.swift; path = CoreTetrisTests/TetriminoTests.swift; sourceTree = SOURCE_ROOT; };
@@ -100,8 +100,10 @@
 		BC509AA81C13CE1200B99D79 /* TetriminoGeneratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetriminoGeneratorTests.swift; sourceTree = "<group>"; };
 		BC509AAA1C13D10D00B99D79 /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		BCB687A21C14D5A700C77ACE /* MathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathTests.swift; sourceTree = "<group>"; };
-		BCB687A41C14D8EB00C77ACE /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		BCB687A41C14D8EB00C77ACE /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		BCB687A61C14F8B000C77ACE /* GameStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStateTests.swift; sourceTree = "<group>"; };
+		BCB687A81C175C4F00C77ACE /* ColorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTests.swift; sourceTree = "<group>"; };
+		BCB687AA1C176D3F00C77ACE /* CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomStringConvertible.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 		BC03B9CA1C1365F400DE2A99 /* CoreTetris */ = {
 			isa = PBXGroup;
 			children = (
+				BCB687AA1C176D3F00C77ACE /* CustomStringConvertible.swift */,
 				BC509AA41C13C8D700B99D79 /* Color.swift */,
 				BC03B9CB1C1365F400DE2A99 /* CoreTetris.h */,
 				BC509AAA1C13D10D00B99D79 /* GameState.swift */,
@@ -192,7 +195,7 @@
 				BC03B9ED1C139C6800DE2A99 /* Math.swift */,
 				BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */,
 				BC509AA61C13C97C00B99D79 /* TetriminoGenerators.swift */,
-				BCB687A41C14D8EB00C77ACE /* Types.swift */,
+				BCB687A41C14D8EB00C77ACE /* Globals.swift */,
 			);
 			path = CoreTetris;
 			sourceTree = "<group>";
@@ -200,12 +203,12 @@
 		BC03B9D81C1365F400DE2A99 /* CoreTetrisTests */ = {
 			isa = PBXGroup;
 			children = (
-				BC03B9D91C1365F400DE2A99 /* CoreTetrisTests.swift */,
 				BCB687A61C14F8B000C77ACE /* GameStateTests.swift */,
 				BCB687A21C14D5A700C77ACE /* MathTests.swift */,
 				BC509AA81C13CE1200B99D79 /* TetriminoGeneratorTests.swift */,
 				BC03B9E91C1381CE00DE2A99 /* TetriminoTests.swift */,
 				BC03B9DB1C1365F400DE2A99 /* Info.plist */,
+				BCB687A81C175C4F00C77ACE /* ColorTests.swift */,
 			);
 			path = CoreTetrisTests;
 			sourceTree = "<group>";
@@ -404,8 +407,9 @@
 				BC509AA51C13C8D700B99D79 /* Color.swift in Sources */,
 				BC509AA71C13C97C00B99D79 /* TetriminoGenerators.swift in Sources */,
 				BC509AAB1C13D10D00B99D79 /* GameState.swift in Sources */,
-				BCB687A51C14D8EB00C77ACE /* Types.swift in Sources */,
+				BCB687A51C14D8EB00C77ACE /* Globals.swift in Sources */,
 				BC03B9E81C13663F00DE2A99 /* Tetrimino.swift in Sources */,
+				BCB687AB1C176D3F00C77ACE /* CustomStringConvertible.swift in Sources */,
 				BC03B9EE1C139C6800DE2A99 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,8 +419,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC509AA91C13CE1200B99D79 /* TetriminoGeneratorTests.swift in Sources */,
-				BC03B9DA1C1365F400DE2A99 /* CoreTetrisTests.swift in Sources */,
 				BCB687A71C14F8B000C77ACE /* GameStateTests.swift in Sources */,
+				BCB687A91C175C4F00C77ACE /* ColorTests.swift in Sources */,
 				BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */,
 				BCB687A31C14D5A700C77ACE /* MathTests.swift in Sources */,
 			);

@@ -79,7 +79,9 @@ final public class FibonacciLinearFeedbackShiftRegister16: Copyable, RandomNumbe
     public convenience init() {
         do {
             try self.init(seed: 0x8988, taps: [1,9])
-        } catch _ {}
+        } catch _ {
+            preconditionFailure()
+        }
     }
     
     public init(seed: UInt16, taps: [Int]) throws {
@@ -98,8 +100,6 @@ final public class FibonacciLinearFeedbackShiftRegister16: Copyable, RandomNumbe
         if taps.count < 2 {
             throw Error.InvalidParameter(taps, "taps parameter must contain at least two values")
         }
-//        self.taps = taps
-//        self.register = seed
     }
     
     private func _tap(offset: Int) -> Int {
@@ -113,9 +113,10 @@ final public class FibonacciLinearFeedbackShiftRegister16: Copyable, RandomNumbe
     
     public func copy() -> FibonacciLinearFeedbackShiftRegister16 {
         // This little dance is because the initializer can fail, but not when making a copy (self must be a valid object)
-        guard let result = try? FibonacciLinearFeedbackShiftRegister16(seed:UInt16(self.register), taps: self.taps) else {
+        do {
+            return try FibonacciLinearFeedbackShiftRegister16(seed:UInt16(self.register), taps: self.taps)
+        } catch _ {
             preconditionFailure()
         }
-        return result
     }
 }

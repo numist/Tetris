@@ -74,12 +74,51 @@ class GameStateTests: XCTestCase {
     }
 
     func testLineClearing() {
+        let testGenerator = TestGenerator(list: [.I,.I,.O,.I,.I])
+        var state = GameState(generator: testGenerator)
+        
+        // .I
+        state = state.movedLeft().movedLeft().movedLeft().withHardDrop()
+        // .I
+        state = state.movedRight().movedRight().movedRight().withHardDrop()
+        // .O
+        state = state.withHardDrop()
+        
+        // |          |
+        // |    OO    |
+        // +----------+
+        XCTAssertEqual(Set([Int2D(x: 4, y:19), Int2D(x: 5, y:19)]), state.playfield.points)
+        
+        // .I
+        state = state.movedLeft().movedLeft().movedLeft().withHardDrop()
+        // .I
+        state = state.movedRight().movedRight().movedRight().withHardDrop()
+        
+        // |          |
+        // +----------+
+        XCTAssertEqual(Set(), state.playfield.points)
+    }
+    
+    func testLineClearingAboveGarbage() {
         let testGenerator = TestGenerator(list: [.I,.I,.O])
         var state = GameState(generator: testGenerator)
-        state = state.movedLeft().movedLeft().movedLeft().withHardDrop()
-        state = state.movedRight().movedRight().movedRight().withHardDrop()
+        
+        // .I
+        state = state.movedLeft().movedLeft().withHardDrop()
+        // .I
+        state = state.movedRight().movedRight().withHardDrop()
+        // .O
         state = state.withHardDrop()
-        XCTAssertEqual(Set([Int2D(x: 4, y:19), Int2D(x: 5, y:19)]), state.playfield.points)
+        // .I
+        state = state.movedLeft().movedLeft().movedLeft().withHardDrop()
+        // .I
+        state = state.movedRight().movedRight().movedRight().withHardDrop()
+        
+        // |          |
+        // |    OO    |
+        // | IIIIIIII |
+        // +----------+
+        XCTAssertEqual(Set([Int2D(x: 8, y: 19), Int2D(x: 5, y: 18), Int2D(x: 2, y: 19), Int2D(x: 1, y: 19), Int2D(x: 5, y: 19), Int2D(x: 7, y: 19), Int2D(x: 4, y: 18), Int2D(x: 4, y: 19), Int2D(x: 3, y: 19), Int2D(x: 6, y: 19)]), state.playfield.points)
     }
 
     func testPieceSpawnsAbovePlayfield() {
@@ -94,8 +133,33 @@ class GameStateTests: XCTestCase {
         let testGenerator = TestGenerator(list: [.I])
         let state = GameState(generator: testGenerator)
         
+        // |          |
+        // |   ....   |
+        // +----------+
         let bottomY = state.playfield.height - 1
         XCTAssertEqual(Set([Int2D(x:3, y:bottomY), Int2D(x:4, y:bottomY), Int2D(x:5, y:bottomY), Int2D(x:6, y:bottomY)]), state.ghostPiece!.points)
     }
+    
+    func testGhostPieceOnTopOfOtherPieces() {
+        let testGenerator = TestGenerator(list: [.I])
+        let state = GameState(generator: testGenerator).withHardDrop()
+        
+        print(state)
+        
+        // |          |
+        // |   ....   |
+        // |   IIII   |
+        // +----------+
+        let ghostY = state.playfield.height - 2
+        XCTAssertEqual(Set([Int2D(x:3, y:ghostY), Int2D(x:4, y:ghostY), Int2D(x:5, y:ghostY), Int2D(x:6, y:ghostY)]), state.ghostPiece!.points)
+    }
 
+    func testPieceRotation() {
+        let testGenerator = TestGenerator(list: [.T])
+        let state = GameState(generator: testGenerator).movedDown().movedDown()
+        
+        print(state.rotatedCW())
+        
+        XCTAssertEqual(Set([Int2D(x: 3, y: 1), Int2D(x: 5, y: 1), Int2D(x: 4, y: 2), Int2D(x: 4, y: 1)]), state.rotatedCCW().rotatedCCW().activePiece?.points)
+    }
 }

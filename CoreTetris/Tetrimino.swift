@@ -5,6 +5,18 @@ public enum TetriminoShape {
     
     public static let allValues: [TetriminoShape] = [.I, .O, .T, .J, .L, .S, .Z]
     
+    public var letter: String { get {
+        switch self {
+        case .I: return "I"
+        case .O: return "O"
+        case .T: return "T"
+        case .J: return "J"
+        case .L: return "L"
+        case .S: return "S"
+        case .Z: return "Z"
+        }
+    } }
+    
     private func _points() -> TetriminoPoints {
         // Origin is top left, y increases downward
         switch self {
@@ -30,7 +42,6 @@ public enum TetriminoShape {
         case .I:
             return Double2D(x:1.5, y:1.5)
         case .O:
-            assertionFailure(".O does not change under rotation")
             return Double2D(x:1.5, y:0.5)
         case .T, .J, .L, .S, .Z:
             return Double2D(x:1, y:1)
@@ -39,11 +50,6 @@ public enum TetriminoShape {
     
     // Rotation follows the rules of the [Super Rotation System](http://tetris.wikia.com/wiki/SRS)
     public func points(rotation: Int = 0) -> TetriminoPoints {
-        switch self {
-        case .O: return self._points()
-        default: ()
-        }
-        
         let cos: Double, sin: Double
         switch rotation %% 4 {
         case 0:
@@ -108,7 +114,7 @@ public func ==(left: Tetrimino, right: Tetrimino) -> Bool {
 public struct Tetrimino: Equatable {
     public let shape: TetriminoShape
 
-    private let rotation: Int
+    let rotation: Int
 
     public init(shape: TetriminoShape, rotation: Int = 0) {
         self.shape = shape
@@ -127,54 +133,4 @@ public struct Tetrimino: Equatable {
             return Tetrimino(shape: self.shape, rotation: newRotation)
         }
     }
-}
-
-extension Tetrimino: CustomStringConvertible {
-    public var description: String { get {
-        var coordinates: [[Bool]]
-        let points = self.shape.points(self.rotation)
-        
-        switch self.shape {
-        case .I:
-            coordinates = [[Bool]](count:4, repeatedValue:[Bool](count:4, repeatedValue:false))
-        case .O:
-            coordinates = [[Bool]](count:3, repeatedValue:[Bool](count:4, repeatedValue:false))
-        case .T, .J, .L, .S, .Z:
-            coordinates = [[Bool]](count:3, repeatedValue:[Bool](count:3, repeatedValue:false))
-        }
-        
-        for point in points {
-            coordinates[point.y][point.x] = true
-        }
-        
-        // Header
-        var result = "+"
-        for _ in 0..<coordinates[0].count {
-            result += "-"
-        }
-        result += "+\n"
-
-        // Rows (y axis grows downward)
-        for i in 0..<coordinates.count {
-            // Columns, lowest to highest
-            result += "|"
-            for j in 0..<coordinates[i].count {
-                if (coordinates[i][j]) {
-                    result += "#"
-                } else {
-                    result += " "
-                }
-            }
-            result += "|\n"
-        }
-        
-        // Footer
-        result += "+"
-        for _ in 0..<coordinates[0].count {
-            result += "-"
-        }
-        result += "+"
-        
-        return result
-    }}
 }

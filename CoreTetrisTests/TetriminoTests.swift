@@ -11,7 +11,21 @@ class TetriminoTests: XCTestCase {
     }
     
     func testPrintingTetriminos() {
-        permuteShapesAndRotations { print($0) }
+        for tetriminoShape in TetriminoShape.allValues {
+            var lines = [String?](count: 6, repeatedValue: nil)
+            for i in 0..<4 {
+                let shapeLines = Tetrimino(shape: tetriminoShape, rotation: i).description.componentsSeparatedByString("\n")
+                for i in 0..<shapeLines.count {
+                    let line = shapeLines[i]
+                    let indexOne = line.startIndex.successor()
+                    lines[i] = (lines[i] ?? line.substringToIndex(indexOne)) + shapeLines[i].substringFromIndex(indexOne)
+                }
+            }
+            for line in lines {
+                guard let line = line else { continue }
+                print(line)
+            }
+        }
     }
     
     func testTetriminosHaveFourPoints() {
