@@ -100,6 +100,7 @@ public struct GamePiece {
     }
 }
 
+// TODO: preview window
 private func spawnPiece(shape: TetriminoShape, width: Int) -> GamePiece {
     return GamePiece(tetrimino: Tetrimino(shape: shape), position: Int2D(x:((width / 2) - 2), y:-2))
 }

@@ -8,31 +8,31 @@ public enum TetriminoShape {
     private func _points() -> TetriminoPoints {
         // Origin is top left, y increases downward
         switch self {
-        case I:
+        case .I:
             return [Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1), Int2D(x:3, y:1)]
-        case O:
+        case .O:
             return [Int2D(x:1, y:0), Int2D(x:2, y:0), Int2D(x:1, y:1), Int2D(x:2, y:1)]
-        case T:
+        case .T:
             return [Int2D(x:1, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1)]
-        case J:
+        case .J:
             return [Int2D(x:0, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1)]
-        case L:
+        case .L:
             return [Int2D(x:2, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1), Int2D(x:2, y:1)]
-        case S:
+        case .S:
             return [Int2D(x:1, y:0), Int2D(x:2, y:0), Int2D(x:0, y:1), Int2D(x:1, y:1)]
-        case Z:
+        case .Z:
             return [Int2D(x:0, y:0), Int2D(x:1, y:0), Int2D(x:1, y:1), Int2D(x:2, y:1)]
         }
     }
     
     private func _rotationCenter() -> Double2D {
         switch self {
-        case I:
+        case .I:
             return Double2D(x:1.5, y:1.5)
-        case O:
+        case .O:
             assertionFailure(".O does not change under rotation")
             return Double2D(x:1.5, y:0.5)
-        case T, J, L, S, Z:
+        case .T, .J, .L, .S, .Z:
             return Double2D(x:1, y:1)
         }
     }
@@ -90,13 +90,13 @@ public enum TetriminoShape {
     
     public var color: Color { get {
         switch self {
-        case I: return Color.cyan
-        case O: return Color.yellow
-        case T: return Color.purple
-        case J: return Color.blue
-        case L: return Color.orange
-        case S: return Color.green
-        case Z: return Color.red
+        case .I: return Color.cyan
+        case .O: return Color.yellow
+        case .T: return Color.purple
+        case .J: return Color.blue
+        case .L: return Color.orange
+        case .S: return Color.green
+        case .Z: return Color.red
         }
     }}
 }
@@ -134,27 +134,13 @@ extension Tetrimino: CustomStringConvertible {
         var coordinates: [[Bool]]
         let points = self.shape.points(self.rotation)
         
-        // FIXME: there's got to be a better way to do this
         switch self.shape {
         case .I:
-            coordinates = [
-                [false, false, false, false],
-                [false, false, false, false],
-                [false, false, false, false],
-                [false, false, false, false]
-            ]
+            coordinates = [[Bool]](count:4, repeatedValue:[Bool](count:4, repeatedValue:false))
         case .O:
-            coordinates = [
-                [false, false, false, false],
-                [false, false, false, false],
-                [false, false, false, false],
-            ]
+            coordinates = [[Bool]](count:3, repeatedValue:[Bool](count:4, repeatedValue:false))
         case .T, .J, .L, .S, .Z:
-            coordinates = [
-                [false, false, false],
-                [false, false, false],
-                [false, false, false],
-            ]
+            coordinates = [[Bool]](count:3, repeatedValue:[Bool](count:3, repeatedValue:false))
         }
         
         for point in points {
@@ -170,7 +156,7 @@ extension Tetrimino: CustomStringConvertible {
 
         // Rows (y axis grows downward)
         for i in 0..<coordinates.count {
-            // Columnes, lowest to highest
+            // Columns, lowest to highest
             result += "|"
             for j in 0..<coordinates[i].count {
                 if (coordinates[i][j]) {
