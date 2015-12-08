@@ -25,10 +25,10 @@ public func +(left: Int2D, right: Int2D) -> Int2D {
 }
 
 public struct Int2D: Hashable {
-    let x: Int
-    let y: Int
+    public let x: Int
+    public let y: Int
     
-    init(x: Int, y: Int) {
+    public init(x: Int, y: Int) {
         self.x = x
         self.y = y
     }
@@ -45,15 +45,15 @@ public struct Int2D: Hashable {
     }
 }
 
-public func -(left: Double2D, right: Double2D) -> Double2D {
+func -(left: Double2D, right: Double2D) -> Double2D {
     return Double2D(x: left.x - right.x, y: left.y - right.y)
 }
 
-public func +(left: Double2D, right: Double2D) -> Double2D {
+func +(left: Double2D, right: Double2D) -> Double2D {
     return Double2D(x: left.x + right.x, y: left.y + right.y)
 }
 
-public struct Double2D {
+struct Double2D {
     let x: Double
     let y: Double
     

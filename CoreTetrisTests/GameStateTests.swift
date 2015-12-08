@@ -31,20 +31,36 @@ final class TestGenerator: TetriminoGenerator {
 
 class GameStateTests: XCTestCase {
 
-    func testGameStuff() {
-        var state = GameState(generator: RandomGenerator(generator: FibonacciLinearFeedbackShiftRegister16()))
+//    func testGameStuff() {
+//        var state = GameState(generator: RandomGenerator(generator: FibonacciLinearFeedbackShiftRegister16()))
+//        
+//        for _ in 0..<100 {
+//            state = state.withHardDrop()
+//        }
+//        XCTAssert(state.gameOver)
+//    }
+
+//    func testLineClearing() {
+//        let testGenerator = TestGenerator(list: [.I,.I,.O])
+//        var state = GameState(generator: testGenerator)
+//        state = state.movedLeft().movedLeft().movedLeft().movedLeft().withHardDrop()
+//        state = state.movedRight().movedRight().movedRight().movedRight().withHardDrop()
+//        state = state.withHardDrop()
+//    }
+
+    func testPieceSpawnsAbovePlayfield() {
+        let testGenerator = TestGenerator(list: [.I])
+        let state = GameState(generator: testGenerator)
         
-        for _ in 0..<100 {
-            state = state.withHardDrop()
-        }
-        XCTAssert(state.gameOver)
+        XCTAssertEqual(Set([Int2D(x:3, y:-1), Int2D(x:4, y:-1), Int2D(x:5, y:-1), Int2D(x:6, y:-1)]), state.activePiece!.points)
     }
 
-    func testLineClearing() {
-        let testGenerator = TestGenerator(list: [.I,.I,.O])
-        var state = GameState(generator: testGenerator)
-        state = state.movedLeft().movedLeft().movedLeft().movedLeft().withHardDrop()
-        state = state.movedRight().movedRight().movedRight().movedRight().withHardDrop()
-        state = state.withHardDrop()
+    func testGhostPieceAtBottomOfPlayfield() {
+        let testGenerator = TestGenerator(list: [.I])
+        let state = GameState(generator: testGenerator)
+        
+        let bottomY = state.playfield.height - 1
+        XCTAssertEqual(Set([Int2D(x:3, y:bottomY), Int2D(x:4, y:bottomY), Int2D(x:5, y:bottomY), Int2D(x:6, y:bottomY)]), state.ghostPiece!.points)
     }
+
 }

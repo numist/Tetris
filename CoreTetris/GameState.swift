@@ -3,10 +3,10 @@ public enum Gravity {
 }
 
 public struct Playfield {
-    let width: Int = 10
-    let height: Int = 20
-    let cells: [Int2D:TetriminoShape]
-    var points: Set<Int2D> { get {
+    public let width: Int = 10
+    public let height: Int = 20
+    public let cells: [Int2D:TetriminoShape]
+    public var points: Set<Int2D> { get {
         // TODO: this is slow
         return Set(self.cells.keys)
     } }
@@ -20,10 +20,14 @@ private func +(left: GamePiece, right: Int2D) -> GamePiece {
     return left.with(position: left.position + right)
 }
 
+public func ==(left: GamePiece, right: GamePiece) -> Bool {
+    return left.points == right.points && left.tetrimino.shape == right.tetrimino.shape
+}
+
 public struct GamePiece {
-    let tetrimino: Tetrimino
+    public let tetrimino: Tetrimino
     let position: Int2D
-    var points: TetriminoPoints { get {
+    public var points: TetriminoPoints { get {
         return Set(self.tetrimino.points.map({ $0 + self.position }))
     } }
     
@@ -44,15 +48,29 @@ public struct GameState {
         return self.activePiece == nil
     }}
 
+    // TODO: cache result, invalidate on sideways movement, rotation, and baking
     public var ghostPiece: GamePiece? { get {
-        assertionFailure("Not implemented")
-        return self.activePiece
+        guard var ghostPiece = activePiece else { return nil }
+    
+        // RILF: Expected 'while' after body of 'repeat' statement
+        // repeat { // Infinite loop
+        while true {
+            ghostPiece = ghostPiece + Int2D(x:0, y:1)
+            let newPoints = ghostPiece.points
+            let intersectsPlayfield = newPoints.intersect(self.playfield.points).count > 0
+            let pastBottomOfPlayfield = newPoints.filter({ $0.y >= self.playfield.height }).count > 0
+            if intersectsPlayfield || pastBottomOfPlayfield {
+                ghostPiece = ghostPiece - Int2D(x:0, y:1)
+                break
+            }
+        }
+        return ghostPiece
     }}
 
     public init(generator: TetriminoGenerator, gravity: Gravity = .Naïve) {
         self.score = 0
         self.playfield = Playfield(cells:[:])
-        self.activePiece = GamePiece(tetrimino: Tetrimino(shape: generator.next()), position: Int2D(x:((self.playfield.width / 2) - 2), y:0))
+        self.activePiece = GamePiece(tetrimino: Tetrimino(shape: generator.next()), position: Int2D(x:((self.playfield.width / 2) - 2), y:-2))
         self.generator = generator
         self.gravity = gravity
     }
@@ -107,6 +125,7 @@ public struct GameState {
                 assertionFailure("Not implemented")
                 return self
             }
+            
             if newPoints.filter({ $0.x >= self.playfield.width }).count > 0 {
                 // New piece extends last the right edge of the playfield
                 // TODO: wall kick?
@@ -117,7 +136,7 @@ public struct GameState {
         
         return GameState(score: score, playfield: playfield, generator: self.generator.copy(), activePiece: activePiece, gravity: self.gravity)
     }
-
+    
     public func rotatedCW() -> GameState {
         guard let activePiece = self.activePiece else {
             return self
@@ -135,22 +154,9 @@ public struct GameState {
     }
     
     public func withHardDrop() -> GameState {
-        guard let activePiece = self.activePiece else {
+        // The ghost piece is by definition located where this piece will land on a hard drop.
+        guard let newPiece = self.ghostPiece else {
             return self
-        }
-        
-        var newPiece: GamePiece = activePiece
-        // RILF: Expected 'while' after body of 'repeat' statement
-        // repeat { // Infinite loop
-        while true {
-            newPiece = newPiece + Int2D(x:0, y:1)
-            let newPoints = newPiece.points
-            let intersectsPlayfield = newPoints.intersect(self.playfield.points).count > 0
-            let pastBottomOfPlayfield = newPoints.filter({ $0.y >= self.playfield.height }).count > 0
-            if intersectsPlayfield || pastBottomOfPlayfield {
-                newPiece = newPiece - Int2D(x:0, y:1)
-                break
-            }
         }
         
         // TODO: do hard drops add to the score?
@@ -162,14 +168,13 @@ public struct GameState {
             return self
         }
         
+        if activePiece == self.ghostPiece! {
+            return bake()
+        }
+        
         let newPiece = activePiece + Int2D(x:0, y:1)
-        let newPoints = newPiece.points
-        if newPoints.intersect(self.playfield.points).count > 0 {
-            return bake()
-        }
-        if newPoints.filter({ $0.y >= self.playfield.height }).count > 0 {
-            return bake()
-        }
+        assert(newPiece.points.intersect(self.playfield.points).count == 0)
+        assert(newPiece.points.filter({ $0.y >= self.playfield.height }).count == 0)
         return with(newPiece)
     }
     
