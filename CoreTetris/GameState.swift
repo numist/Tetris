@@ -2,7 +2,7 @@ public enum Gravity {
     case Naïve, Sticky, Cascade
 }
 
-public struct Playfield {
+public struct Playfield: CustomStringConvertible {
     public let width: Int = 10
     public let height: Int = 20
     public let cells: [Int2D:TetriminoShape]
@@ -16,23 +16,64 @@ public struct Playfield {
         precondition(piece.points.intersect(self.points).count == 0)
         
         var newCells = self.cells
-        piece.points.forEach({ newCells[$0] = piece.tetrimino.shape })
+        for point in piece.points {
+            newCells[point] = piece.tetrimino.shape
+        }
         return Playfield(cells: newCells)
     }
     
     private func remove(line: Int) -> Playfield {
         var newCells = [Int2D:TetriminoShape]()
         
-        self.cells.forEach({ point, shape in
+        for (point, shape) in self.cells {
             if point.y > line {
                 newCells[point] = shape
             } else if point.y < line {
                 newCells[Int2D(x: point.x, y: point.y + 1)] = shape
             }
-        })
+        }
         
         return Playfield(cells: newCells)
     }
+    
+    public var description: String { get {
+        // Header
+        var result = "+"
+        for _ in 0..<self.width {
+            result += "-"
+        }
+        result += "+\n"
+        
+        // Rows (y axis grows downward)
+        for y in 0..<self.height {
+            result += "|"
+            for x in 0..<self.width {
+                if let shape = self.cells[Int2D(x: x, y: y)] {
+                    switch shape {
+                    case .I: result += "I"
+                    case .O: result += "O"
+                    case .T: result += "T"
+                    case .J: result += "J"
+                    case .L: result += "L"
+                    case .S: result += "S"
+                    case .Z: result += "Z"
+                    }
+                } else {
+                    result += " "
+                }
+            }
+            result += "|\n"
+        }
+        
+        // Footer
+        result += "+"
+        for _ in 0..<self.width {
+            result += "-"
+        }
+        result += "+"
+        
+        return result
+    } }
 }
 
 private func -(left: GamePiece, right: Int2D) -> GamePiece {
