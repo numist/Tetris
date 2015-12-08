@@ -68,27 +68,28 @@ public struct Double2D {
     }
 }
 
-public protocol Copying {
-    func copy() -> Self
-}
-
 public protocol RandomNumberGenerator {
     func next() -> Int
 }
 
-enum Error : ErrorType {
-    case InvalidParameter(Any, String)
-}
-
-final public class FibonacciLinearFeedbackShiftRegister16: Copying, RandomNumberGenerator {
+final public class FibonacciLinearFeedbackShiftRegister16: Copyable, RandomNumberGenerator {
     private var register: Int
     private let taps: [Int]
     
-    public init(seed: UInt16 = 0x8988, taps: [Int]) throws {
+    public convenience init() {
+        do {
+            try self.init(seed: 0x8988, taps: [1,9])
+        } catch _ {}
+    }
+    
+    public init(seed: UInt16, taps: [Int]) throws {
         // All stored properties of a class instance must be initialized before throwing from an initializer
         // This is a bug in Swift: https://devforums.apple.com/thread/251388?start=0&tstart=0#1062922
         self.taps = taps
         self.register = Int(seed)
+        if seed == 0 {
+            throw Error.InvalidParameter(seed, "seed parameter must not be zero")
+        }
         try taps.forEach { tap in
             if 0 > tap || tap >= 16 {
                 throw Error.InvalidParameter(taps, "taps parameter must only contain values in the range 0..<16")

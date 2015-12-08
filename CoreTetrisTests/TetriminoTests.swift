@@ -3,7 +3,7 @@ import CoreTetris
 
 class TetriminoTests: XCTestCase {
     func permuteShapesAndRotations(work: (Tetrimino) -> Void) {
-        for tetriminoShape in TetriminoType.allValues {
+        for tetriminoShape in TetriminoShape.allValues {
             for i in 0..<4 {
                 work(Tetrimino(shape: tetriminoShape, rotation: i))
             }
@@ -19,7 +19,7 @@ class TetriminoTests: XCTestCase {
     }
     
     func testTetriminosHaveDifferentColors() {
-        var colors = TetriminoType.allValues.map { $0.color }
+        var colors = TetriminoShape.allValues.map { $0.color }
         while colors.count > 0 {
             let color = colors.removeFirst()
             colors.forEach { XCTAssertFalse($0 == color) }
@@ -27,7 +27,7 @@ class TetriminoTests: XCTestCase {
     }
     
     func testNonOTetriminosHaveDifferentPoints() {
-        var tetriminoList = TetriminoType.allValues.filter { shape in
+        var tetriminoList = TetriminoShape.allValues.filter { shape in
             switch shape {
             case .O:
                 return false

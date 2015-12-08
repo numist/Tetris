@@ -1,9 +1,9 @@
 public typealias TetriminoPoints = Set<Int2D>
 
-public enum TetriminoType {
+public enum TetriminoShape {
     case I, O, T, J, L, S, Z
     
-    public static let allValues: [TetriminoType] = [.I, .O, .T, .J, .L, .S, .Z]
+    public static let allValues: [TetriminoShape] = [.I, .O, .T, .J, .L, .S, .Z]
     
     private func _points() -> TetriminoPoints {
         // Origin is top left, y increases downward
@@ -106,11 +106,11 @@ public func ==(left: Tetrimino, right: Tetrimino) -> Bool {
 }
 
 public struct Tetrimino: Equatable {
-    public let shape: TetriminoType
+    public let shape: TetriminoShape
 
     private let rotation: Int
 
-    public init(shape: TetriminoType, rotation: Int = 0) {
+    public init(shape: TetriminoShape, rotation: Int = 0) {
         self.shape = shape
         self.rotation = rotation %% 4
     }

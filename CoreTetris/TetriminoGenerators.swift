@@ -1,34 +1,42 @@
-import Darwin
-
-public protocol TetriminoGenerator {
-    func next() -> Tetrimino
-}
-
-extension Array {
-    func randomized() -> [Element] {
-        var result = self
-        let count = result.count
-        for i in 0..<count {
-            let element = result.removeAtIndex(i)
-            result.insert(element, atIndex: Int(arc4random_uniform(UInt32(count))))
-        }
-        return result
-    }
+public protocol TetriminoGenerator: Copyable {
+    func next() -> TetriminoShape
 }
 
 // BPS's [Random Generator](http://tetris.wikia.com/wiki/Random_Generator)
-public class RandomGenerator: TetriminoGenerator {
-    private var tetriminos: [TetriminoType] = []
+final public class RandomGenerator<RNG where RNG:RandomNumberGenerator, RNG:Copyable>: TetriminoGenerator, Copyable {
+    private var tetriminos: [TetriminoShape] = []
+    private let generator: RNG
     
-    private func generateBag() -> Void {
-        self.tetriminos = TetriminoType.allValues.randomized()
+    public init(generator: RNG) {
+        self.generator = generator
     }
     
-    public func next() -> Tetrimino {
+    private init(tetriminos: [TetriminoShape], generator: RNG) {
+        self.tetriminos = tetriminos
+        self.generator = generator
+    }
+    
+    public func copy() -> RandomGenerator {
+        return RandomGenerator(tetriminos: self.tetriminos, generator: self.generator.copy())
+    }
+    
+    private func generateBag() -> Void {
+        var tetriminos = TetriminoShape.allValues
+        let count = tetriminos.count
+        for i in 0..<count {
+            let element = tetriminos.removeAtIndex(i)
+            // TODO: Modulo sucks, but there are seven tetriminos so it should shuffle pretty nicely?
+            tetriminos.insert(element, atIndex: self.generator.next() % count)
+        }
+        
+        self.tetriminos = tetriminos
+    }
+    
+    public func next() -> TetriminoShape {
         if self.tetriminos.count == 0 {
             self.generateBag()
         }
-        return Tetrimino(shape: self.tetriminos.removeFirst())
+        return self.tetriminos.removeFirst()
     }
 }
 

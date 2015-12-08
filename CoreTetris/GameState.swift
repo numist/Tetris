@@ -1,115 +1,189 @@
-struct Playfield {
+public enum Gravity {
+    case Naïve, Sticky, Cascade
+}
+
+public struct Playfield {
     let width: Int = 10
     let height: Int = 20
-    let cells: [Int2D:TetriminoType]
+    let cells: [Int2D:TetriminoShape]
     var points: Set<Int2D> { get {
         // TODO: this is slow
         return Set(self.cells.keys)
     } }
 }
 
-extension Array {
-    func appending(newElement: Element) -> [Element] {
-        var result = self
-        result.append(newElement)
-        return result
-    }
+private func -(left: GamePiece, right: Int2D) -> GamePiece {
+    return left.with(position: left.position - right)
 }
 
-struct GamePiece {
+private func +(left: GamePiece, right: Int2D) -> GamePiece {
+    return left.with(position: left.position + right)
+}
+
+public struct GamePiece {
     let tetrimino: Tetrimino
     let position: Int2D
     var points: TetriminoPoints { get {
         return Set(self.tetrimino.points.map({ $0 + self.position }))
     } }
+    
+    private func with(position position: Int2D? = nil, tetrimino: Tetrimino? = nil) -> GamePiece {
+        return GamePiece(tetrimino: tetrimino ?? self.tetrimino, position: position ?? self.position)
+    }
 }
 
-struct GameState {
-    let score: Int
-    let playfield: Playfield
-    // TODO: This should be a TetriminoGenerator, RandomGenerator should be a struct, and it should be deterministic, using an LFSR
-    let pieceQueue: [TetriminoType]
-    let activePiece: GamePiece?
-    var gameOver: Bool { get {
-        return self.activePiece == nil
-    } }
+public struct GameState {
+    public let score: Int
+    public let playfield: Playfield
+    public let activePiece: GamePiece?
     
-    init(var pieceQueue: [TetriminoType]) {
+    private let generator: TetriminoGenerator
+    private let gravity: Gravity
+    
+    public var gameOver: Bool { get {
+        return self.activePiece == nil
+    }}
+
+    public var ghostPiece: GamePiece? { get {
+        assertionFailure("Not implemented")
+        return self.activePiece
+    }}
+
+    public init(generator: TetriminoGenerator, gravity: Gravity = .Naïve) {
         self.score = 0
         self.playfield = Playfield(cells:[:])
-        self.activePiece = GamePiece(tetrimino: Tetrimino(shape: pieceQueue.removeFirst()), position: Int2D(x:((self.playfield.width / 2) - 2), y:0))
-        self.pieceQueue = pieceQueue
+        self.activePiece = GamePiece(tetrimino: Tetrimino(shape: generator.next()), position: Int2D(x:((self.playfield.width / 2) - 2), y:0))
+        self.generator = generator
+        self.gravity = gravity
     }
-    
-    private init(score: Int, playfield: Playfield, pieceQueue: [TetriminoType], activePiece: GamePiece?) {
+
+    private init(score: Int, playfield: Playfield, generator: TetriminoGenerator, activePiece: GamePiece?, gravity: Gravity) {
         self.score = score
         self.playfield = playfield
-        self.pieceQueue = pieceQueue
+        self.generator = generator
         self.activePiece = activePiece
+        self.gravity = gravity
     }
     
-    // TODO: this should go away
-    func addingPiece(piece: TetriminoType) -> GameState {
-        if self.gameOver {
-            return self
+    private func bake() -> GameState {
+        assertionFailure("Not implemented")
+        
+        switch self.gravity {
+        case .Naïve:
+            assertionFailure("Not implemented")
+        default:
+            assertionFailure("Not implemented")
         }
-        return GameState(score: self.score, playfield: self.playfield, pieceQueue: self.pieceQueue.appending(piece), activePiece: self.activePiece)
-    }
-    
-    func rotatedCW() -> GameState {
-        if self.gameOver || self.activePiece == nil {
-            return self
-        }
-        // TODO
+        
         return self
     }
     
-    func rotatedCCW() -> GameState {
-        if self.gameOver || self.activePiece == nil {
+    // RILF: Use of unresolved identifier 'self'
+    // private func with(score: Int = self.score, playfield: Playfield = self.playfield, activePiece: GamePiece? = self.activePiece) -> GameState {
+    private func with(activePiece: GamePiece?, newScore: Int? = nil, newPlayfield: Playfield? = nil) -> GameState {
+        let playfield = newPlayfield ?? self.playfield
+        let score = newScore ?? self.score
+        
+        if let newPiece = activePiece {
+            let newPoints = newPiece.points
+            
+            if newPoints.intersect(self.playfield.points).count > 0 {
+                // New piece intersects cells in the playfield
+                // TODO: floor kick?
+                assertionFailure("Not implemented")
+                return self
+            }
+            
+            if newPoints.filter({ $0.y >= self.playfield.height }).count > 0 {
+                // New piece extends below the bottom of the playfield
+                // TODO: floor kick?
+                assertionFailure("Not implemented")
+                return self
+            }
+            
+            if newPoints.filter({ $0.x < 0 }).count > 0 {
+                // New piece extends last the left edge of the playfield
+                // TODO: wall kick?
+                assertionFailure("Not implemented")
+                return self
+            }
+            if newPoints.filter({ $0.x >= self.playfield.width }).count > 0 {
+                // New piece extends last the right edge of the playfield
+                // TODO: wall kick?
+                assertionFailure("Not implemented")
+                return self
+            }
+        }
+        
+        return GameState(score: score, playfield: playfield, generator: self.generator.copy(), activePiece: activePiece, gravity: self.gravity)
+    }
+
+    public func rotatedCW() -> GameState {
+        guard let activePiece = self.activePiece else {
             return self
         }
-        // TODO
-        return self
+        
+        return self.with(activePiece.with(tetrimino: activePiece.tetrimino.rotated(true)))
     }
     
-    func hardDropped() -> GameState {
-        if self.gameOver || self.activePiece == nil {
+    public func rotatedCCW() -> GameState {
+        guard let activePiece = self.activePiece else {
             return self
         }
-        // TODO
-        return self
+
+        return self.with(activePiece.with(tetrimino: activePiece.tetrimino.rotated(false)))
     }
     
-    func softDropped() -> GameState {
-        if self.gameOver || self.activePiece == nil {
+    public func withHardDrop() -> GameState {
+        guard let activePiece = self.activePiece else {
             return self
         }
-        // TODO
-        return self
+        
+        var newPiece: GamePiece = activePiece
+        // RILF: Expected 'while' after body of 'repeat' statement
+        // repeat { // Infinite loop
+        while true {
+            newPiece = newPiece + Int2D(x:0, y:1)
+            let newPoints = newPiece.points
+            let intersectsPlayfield = newPoints.intersect(self.playfield.points).count > 0
+            let pastBottomOfPlayfield = newPoints.filter({ $0.y >= self.playfield.height }).count > 0
+            if intersectsPlayfield || pastBottomOfPlayfield {
+                newPiece = newPiece - Int2D(x:0, y:1)
+                break
+            }
+        }
+        
+        // TODO: do hard drops add to the score?
+        return with(newPiece).bake()
     }
     
-    func movedLeft() -> GameState {
-        if self.gameOver || self.activePiece == nil {
+    public func movedDown() -> GameState {
+        guard let activePiece = self.activePiece else {
             return self
         }
-        let newPoints = Set(self.activePiece!.points.map({ $0 - Int2D(x:1, y:0) }))
+        
+        let newPiece = activePiece + Int2D(x:0, y:1)
+        let newPoints = newPiece.points
         if newPoints.intersect(self.playfield.points).count > 0 {
-            // Illegal move, no change
-            return self
+            return bake()
         }
-        if newPoints.filter({ $0.x < 0 }).count > 0 {
-            // Illegal move, no change
-            return self
+        if newPoints.filter({ $0.y >= self.playfield.height }).count > 0 {
+            return bake()
         }
-        // TODO
-        return self
+        return with(newPiece)
     }
     
-    func movedRight() -> GameState {
-        if self.gameOver || self.activePiece == nil {
+    public func movedLeft() -> GameState {
+        guard let activePiece = self.activePiece else {
             return self
         }
-        // TODO
-        return self
+        return with(activePiece - Int2D(x:1, y:0))
+    }
+    
+    public func movedRight() -> GameState {
+        guard let activePiece = self.activePiece else {
+            return self
+        }
+        return with(activePiece + Int2D(x:1, y:0))
     }
 }
