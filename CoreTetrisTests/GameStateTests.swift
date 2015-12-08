@@ -11,11 +11,12 @@ import CoreTetris
 
 final class TestGenerator: TetriminoGenerator {
     private let tetriminos: [TetriminoShape]
-    private var index: Int = 0
+    private var index: Int
     
-    init(list: [TetriminoShape]) {
+    init(list: [TetriminoShape], index: Int = 0) {
         precondition(list.count > 0)
         self.tetriminos = list
+        self.index = index
     }
     
     func next() -> TetriminoShape {
@@ -25,7 +26,7 @@ final class TestGenerator: TetriminoGenerator {
     }
     
     func copy() -> TestGenerator {
-        return TestGenerator(list: self.tetriminos)
+        return TestGenerator(list: self.tetriminos, index: self.index)
     }
 }
 
@@ -40,13 +41,14 @@ class GameStateTests: XCTestCase {
 //        XCTAssert(state.gameOver)
 //    }
 
-//    func testLineClearing() {
-//        let testGenerator = TestGenerator(list: [.I,.I,.O])
-//        var state = GameState(generator: testGenerator)
-//        state = state.movedLeft().movedLeft().movedLeft().movedLeft().withHardDrop()
-//        state = state.movedRight().movedRight().movedRight().movedRight().withHardDrop()
-//        state = state.withHardDrop()
-//    }
+    func testLineClearing() {
+        let testGenerator = TestGenerator(list: [.I,.I,.O])
+        var state = GameState(generator: testGenerator)
+        state = state.movedLeft().movedLeft().movedLeft().withHardDrop()
+        state = state.movedRight().movedRight().movedRight().withHardDrop()
+        state = state.withHardDrop()
+        XCTAssertEqual(Set([Int2D(x: 4, y:19), Int2D(x: 5, y:19)]), state.playfield.points)
+    }
 
     func testPieceSpawnsAbovePlayfield() {
         let testGenerator = TestGenerator(list: [.I])

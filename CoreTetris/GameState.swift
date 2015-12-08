@@ -6,10 +6,33 @@ public struct Playfield {
     public let width: Int = 10
     public let height: Int = 20
     public let cells: [Int2D:TetriminoShape]
+    
     public var points: Set<Int2D> { get {
         // TODO: this is slow
         return Set(self.cells.keys)
     } }
+    
+    private func bake(piece: GamePiece) -> Playfield {
+        precondition(piece.points.intersect(self.points).count == 0)
+        
+        var newCells = self.cells
+        piece.points.forEach({ newCells[$0] = piece.tetrimino.shape })
+        return Playfield(cells: newCells)
+    }
+    
+    private func remove(line: Int) -> Playfield {
+        var newCells = [Int2D:TetriminoShape]()
+        
+        self.cells.forEach({ point, shape in
+            if point.y > line {
+                newCells[point] = shape
+            } else if point.y < line {
+                newCells[Int2D(x: point.x, y: point.y + 1)] = shape
+            }
+        })
+        
+        return Playfield(cells: newCells)
+    }
 }
 
 private func -(left: GamePiece, right: Int2D) -> GamePiece {
@@ -34,6 +57,10 @@ public struct GamePiece {
     private func with(position position: Int2D? = nil, tetrimino: Tetrimino? = nil) -> GamePiece {
         return GamePiece(tetrimino: tetrimino ?? self.tetrimino, position: position ?? self.position)
     }
+}
+
+private func spawnPiece(shape: TetriminoShape, width: Int) -> GamePiece {
+    return GamePiece(tetrimino: Tetrimino(shape: shape), position: Int2D(x:((width / 2) - 2), y:-2))
 }
 
 public struct GameState {
@@ -70,7 +97,7 @@ public struct GameState {
     public init(generator: TetriminoGenerator, gravity: Gravity = .Naïve) {
         self.score = 0
         self.playfield = Playfield(cells:[:])
-        self.activePiece = GamePiece(tetrimino: Tetrimino(shape: generator.next()), position: Int2D(x:((self.playfield.width / 2) - 2), y:-2))
+        self.activePiece = spawnPiece(generator.next(), width: self.playfield.width)
         self.generator = generator
         self.gravity = gravity
     }
@@ -84,16 +111,29 @@ public struct GameState {
     }
     
     private func bake() -> GameState {
-        assertionFailure("Not implemented")
-        
-        switch self.gravity {
-        case .Naïve:
-            assertionFailure("Not implemented")
-        default:
-            assertionFailure("Not implemented")
+        guard let activePiece = self.activePiece else {
+            preconditionFailure()
         }
         
-        return self
+        var newPlayfield = self.playfield.bake(activePiece)
+        
+        let completedRows = newPlayfield.points.reduce([Int:Int](), combine: { accum, elem in
+            var newAccum = accum
+            newAccum[elem.y] = (newAccum[elem.y] ?? 0) + 1
+            return newAccum
+        }).filter({ return $1 == self.playfield.width }).map({ $0.0 })
+        
+        completedRows.forEach({ newPlayfield = newPlayfield.remove($0) })
+        
+        if completedRows.count > 0 {
+            switch self.gravity {
+            case .Naïve: break
+            default:
+                assertionFailure("Not implemented")
+            }
+        }
+        
+        return with(spawnPiece(self.generator.next(), width: self.playfield.width), newPlayfield: newPlayfield)
     }
     
     // RILF: Use of unresolved identifier 'self'
