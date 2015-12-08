@@ -32,14 +32,16 @@ final class TestGenerator: TetriminoGenerator {
 
 class GameStateTests: XCTestCase {
 
-//    func testGameStuff() {
-//        var state = GameState(generator: RandomGenerator(generator: FibonacciLinearFeedbackShiftRegister16()))
-//        
-//        for _ in 0..<100 {
-//            state = state.withHardDrop()
-//        }
-//        XCTAssert(state.gameOver)
-//    }
+    func testGameStuff() {
+        var state = GameState(generator: RandomGenerator(generator: FibonacciLinearFeedbackShiftRegister16()))
+        
+        for _ in 0..<11 {
+            state = state.withHardDrop()
+        }
+        XCTAssert(!state.gameOver)
+        state = state.withHardDrop()
+        XCTAssert(state.gameOver)
+    }
 
     func testLineClearing() {
         let testGenerator = TestGenerator(list: [.I,.I,.O])

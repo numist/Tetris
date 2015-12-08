@@ -176,7 +176,13 @@ public struct GameState {
             }
         }
         
-        return with(spawnPiece(self.generator.next(), width: self.playfield.width), newPlayfield: newPlayfield)
+        let newPiece = spawnPiece(self.generator.next(), width: newPlayfield.width)
+        
+        if newPiece.points.intersect(newPlayfield.points).count > 0 {
+            return with(nil, newPlayfield: newPlayfield)
+        } else {
+            return with(newPiece, newPlayfield: newPlayfield)
+        }
     }
     
     // RILF: Use of unresolved identifier 'self'
