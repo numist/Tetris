@@ -164,7 +164,9 @@ public struct GameState {
             return newAccum
         }).filter({ return $1 == self.playfield.width }).map({ $0.0 })
         
-        completedRows.forEach({ newPlayfield = newPlayfield.remove($0) })
+        for rowNumber in completedRows {
+            newPlayfield = newPlayfield.remove(rowNumber)
+        }
         
         if completedRows.count > 0 {
             switch self.gravity {

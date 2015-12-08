@@ -90,7 +90,7 @@ final public class FibonacciLinearFeedbackShiftRegister16: Copyable, RandomNumbe
         if seed == 0 {
             throw Error.InvalidParameter(seed, "seed parameter must not be zero")
         }
-        try taps.forEach { tap in
+        for tap in taps {
             if 0 > tap || tap >= 16 {
                 throw Error.InvalidParameter(taps, "taps parameter must only contain values in the range 0..<16")
             }

@@ -22,7 +22,9 @@ class TetriminoTests: XCTestCase {
         var colors = TetriminoShape.allValues.map { $0.color }
         while colors.count > 0 {
             let color = colors.removeFirst()
-            colors.forEach { XCTAssertFalse($0 == color) }
+            for element in colors {
+                XCTAssertFalse(element == color)
+            }
         }
     }
     
@@ -41,7 +43,9 @@ class TetriminoTests: XCTestCase {
         }
         while tetriminoList.count > 0 {
             let points = tetriminoList.removeFirst().points
-            tetriminoList.forEach { XCTAssertFalse($0.points == points) }
+            for tetrimino in tetriminoList {
+                XCTAssertFalse(tetrimino.points == points)
+            }
         }
     }
     
