@@ -6,11 +6,12 @@ public struct Playfield {
     public let width: Int = 10
     public let height: Int = 20
     public let cells: [Int2D:TetriminoShape]
+    public let points: Set<Int2D>
     
-    public var points: Set<Int2D> { get {
-        // TODO: this is slow
-        return Set(self.cells.keys)
-    } }
+    private init(cells: [Int2D:TetriminoShape]) {
+        self.cells = cells
+        self.points = Set(cells.keys)
+    }
     
     private func bake(piece: GamePiece) -> Playfield {
         precondition(piece.points.intersect(self.points).count == 0)
@@ -52,10 +53,14 @@ public func ==(left: GamePiece, right: GamePiece) -> Bool {
 public struct GamePiece {
     public let tetrimino: Tetrimino
     let position: Int2D
-    public var points: TetriminoPoints { get {
-        return Set(self.tetrimino.points.map({ $0 + self.position }))
-    } }
+    public let points: TetriminoPoints
 
+    private init(tetrimino: Tetrimino, position: Int2D) {
+        self.tetrimino = tetrimino
+        self.position = position
+        self.points = Set(tetrimino.points.map({ $0 + position }))
+    }
+    
     private func with(tetrimino tetrimino: Tetrimino) -> GamePiece {
         return GamePiece(tetrimino: tetrimino, position: self.position)
     }
@@ -70,10 +75,29 @@ private func spawnPiece(shape: TetriminoShape, width: Int) -> GamePiece {
     return GamePiece(tetrimino: Tetrimino(shape: shape), position: Int2D(x:((width / 2) - 2), y:-2))
 }
 
+private func generateGhost(activePiece activePiece: GamePiece?, playfield: Playfield) -> GamePiece? {
+    guard var ghostPiece = activePiece else { return nil }
+    
+    // RILF: Expected 'while' after body of 'repeat' statement
+    // repeat { // Infinite loop
+    while true {
+        ghostPiece = ghostPiece + Int2D(x:0, y:1)
+        let newPoints = ghostPiece.points
+        let intersectsPlayfield = newPoints.intersect(playfield.points).count > 0
+        let pastBottomOfPlayfield = newPoints.filter({ $0.y >= playfield.height }).count > 0
+        if intersectsPlayfield || pastBottomOfPlayfield {
+            ghostPiece = ghostPiece - Int2D(x:0, y:1)
+            break
+        }
+    }
+    return ghostPiece
+}
+
 public struct GameState {
     public let score: Int
     public let playfield: Playfield
     public let activePiece: GamePiece?
+    public let ghostPiece: GamePiece?
     
     private let generator: TetriminoGenerator
     private let gravity: Gravity
@@ -82,30 +106,13 @@ public struct GameState {
         return self.activePiece == nil
     }}
 
-    public var ghostPiece: GamePiece? { get {
-        guard var ghostPiece = activePiece else { return nil }
-    
-        // RILF: Expected 'while' after body of 'repeat' statement
-        // repeat { // Infinite loop
-        while true {
-            ghostPiece = ghostPiece + Int2D(x:0, y:1)
-            let newPoints = ghostPiece.points
-            let intersectsPlayfield = newPoints.intersect(self.playfield.points).count > 0
-            let pastBottomOfPlayfield = newPoints.filter({ $0.y >= self.playfield.height }).count > 0
-            if intersectsPlayfield || pastBottomOfPlayfield {
-                ghostPiece = ghostPiece - Int2D(x:0, y:1)
-                break
-            }
-        }
-        return ghostPiece
-    }}
-
     public init(generator: TetriminoGenerator, gravity: Gravity = .Naïve) {
         self.score = 0
         self.playfield = Playfield(cells:[:])
         self.activePiece = spawnPiece(generator.next(), width: self.playfield.width)
         self.generator = generator
         self.gravity = gravity
+        self.ghostPiece = generateGhost(activePiece: self.activePiece, playfield: self.playfield)
     }
 
     private init(score: Int, playfield: Playfield, generator: TetriminoGenerator, activePiece: GamePiece?, gravity: Gravity) {
@@ -114,6 +121,7 @@ public struct GameState {
         self.generator = generator
         self.activePiece = activePiece
         self.gravity = gravity
+        self.ghostPiece = generateGhost(activePiece: self.activePiece, playfield: self.playfield)
     }
     
     private func bake() -> GameState {
