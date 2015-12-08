@@ -163,7 +163,7 @@ public struct GameState {
             var newAccum = accum
             newAccum[elem.y] = (newAccum[elem.y] ?? 0) + 1
             return newAccum
-        }).filter({ return $1 == self.playfield.width }).map({ $0.0 })
+        }).filter({ return $1 == newPlayfield.width }).map({ $0.0 })
         
         for rowNumber in completedRows {
             newPlayfield = newPlayfield.remove(rowNumber)
@@ -195,14 +195,14 @@ public struct GameState {
         if let newPiece = activePiece {
             let newPoints = newPiece.points
             
-            if newPoints.intersect(self.playfield.points).count > 0 {
+            if newPoints.intersect(playfield.points).count > 0 {
                 // New piece intersects cells in the playfield
                 // TODO: floor kick?
                 assertionFailure("Not implemented")
                 return self
             }
             
-            if newPoints.filter({ $0.y >= self.playfield.height }).count > 0 {
+            if newPoints.filter({ $0.y >= playfield.height }).count > 0 {
                 // New piece extends below the bottom of the playfield
                 // TODO: floor kick?
                 assertionFailure("Not implemented")
@@ -216,7 +216,7 @@ public struct GameState {
                 return self
             }
             
-            if newPoints.filter({ $0.x >= self.playfield.width }).count > 0 {
+            if newPoints.filter({ $0.x >= playfield.width }).count > 0 {
                 // New piece extends last the right edge of the playfield
                 // TODO: wall kick?
                 assertionFailure("Not implemented")
