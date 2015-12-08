@@ -40,8 +40,37 @@ class GameStateTests: XCTestCase {
         }
         XCTAssert(!state.gameOver)
         XCTAssertNotNil(state.ghostPiece)
-        state = state.withHardDrop()
+        state = state.movedDown()
         XCTAssert(state.gameOver)
+        
+        print(state.playfield)
+        
+        XCTAssertNil(state.ghostPiece)
+        XCTAssertNil(state.activePiece)
+        
+        var score = state.score
+        state = state.movedDown()
+        XCTAssertEqual(score, state.score)
+        score = state.score
+        
+        state = state.movedLeft()
+        XCTAssertEqual(score, state.score)
+        score = state.score
+        
+        state = state.movedRight()
+        XCTAssertEqual(score, state.score)
+        score = state.score
+        
+        state = state.rotatedCCW()
+        XCTAssertEqual(score, state.score)
+        score = state.score
+        
+        state = state.rotatedCW()
+        XCTAssertEqual(score, state.score)
+        score = state.score
+        
+        state = state.withHardDrop()
+        XCTAssertEqual(score, state.score)
     }
 
     func testLineClearing() {
@@ -58,6 +87,7 @@ class GameStateTests: XCTestCase {
         let state = GameState(generator: testGenerator)
         
         XCTAssertEqual(Set([Int2D(x:3, y:-1), Int2D(x:4, y:-1), Int2D(x:5, y:-1), Int2D(x:6, y:-1)]), state.activePiece!.points)
+        XCTAssertEqual(Set([Int2D(x:3, y:0), Int2D(x:4, y:0), Int2D(x:5, y:0), Int2D(x:6, y:0)]), state.movedDown().activePiece!.points)
     }
 
     func testGhostPieceAtBottomOfPlayfield() {

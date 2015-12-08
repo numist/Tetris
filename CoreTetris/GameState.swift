@@ -181,9 +181,8 @@ public struct GameState {
         
         if newPiece.points.intersect(newPlayfield.points).count > 0 {
             return with(nil, newPlayfield: newPlayfield)
-        } else {
-            return with(newPiece, newPlayfield: newPlayfield)
         }
+        return with(newPiece, newPlayfield: newPlayfield)
     }
     
     // RILF: Use of unresolved identifier 'self'
