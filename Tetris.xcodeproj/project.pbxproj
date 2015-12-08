@@ -29,6 +29,15 @@
 		BCB687A71C14F8B000C77ACE /* GameStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A61C14F8B000C77ACE /* GameStateTests.swift */; };
 		BCB687A91C175C4F00C77ACE /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A81C175C4F00C77ACE /* ColorTests.swift */; };
 		BCB687AB1C176D3F00C77ACE /* CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687AA1C176D3F00C77ACE /* CustomStringConvertible.swift */; };
+		BCB687D01C1772DC00C77ACE /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687CF1C1772DC00C77ACE /* main.swift */; };
+		BCB687D41C17730D00C77ACE /* libncurses.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BCB687B71C17713100C77ACE /* libncurses.tbd */; };
+		BCB687D81C1773E500C77ACE /* CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687AA1C176D3F00C77ACE /* CustomStringConvertible.swift */; };
+		BCB687D91C1773E700C77ACE /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA41C13C8D700B99D79 /* Color.swift */; };
+		BCB687DA1C1773EA00C77ACE /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AAA1C13D10D00B99D79 /* GameState.swift */; };
+		BCB687DB1C1773EE00C77ACE /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9ED1C139C6800DE2A99 /* Math.swift */; };
+		BCB687DC1C1773F000C77ACE /* Tetrimino.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03B9E71C13663F00DE2A99 /* Tetrimino.swift */; };
+		BCB687DD1C1773F200C77ACE /* TetriminoGenerators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC509AA61C13C97C00B99D79 /* TetriminoGenerators.swift */; };
+		BCB687DE1C1773F500C77ACE /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB687A41C14D8EB00C77ACE /* Globals.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +83,15 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BCB687CB1C1772DC00C77ACE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +122,9 @@
 		BCB687A61C14F8B000C77ACE /* GameStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameStateTests.swift; sourceTree = "<group>"; };
 		BCB687A81C175C4F00C77ACE /* ColorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTests.swift; sourceTree = "<group>"; };
 		BCB687AA1C176D3F00C77ACE /* CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomStringConvertible.swift; sourceTree = "<group>"; };
+		BCB687B71C17713100C77ACE /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
+		BCB687CD1C1772DC00C77ACE /* tetris */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tetris; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCB687CF1C1772DC00C77ACE /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,16 +158,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BCB687CA1C1772DC00C77ACE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCB687D41C17730D00C77ACE /* libncurses.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		BC03B9991C1365DD00DE2A99 = {
 			isa = PBXGroup;
 			children = (
+				BCB687B71C17713100C77ACE /* libncurses.tbd */,
 				BC03B9A41C1365DD00DE2A99 /* Tetris */,
 				BC03B9B81C1365DD00DE2A99 /* TetrisTests */,
 				BC03B9CA1C1365F400DE2A99 /* CoreTetris */,
 				BC03B9D81C1365F400DE2A99 /* CoreTetrisTests */,
+				BCB687CE1C1772DC00C77ACE /* tetris-cli */,
 				BC03B9A31C1365DD00DE2A99 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -158,6 +189,7 @@
 				BC03B9B51C1365DD00DE2A99 /* TetrisTests.xctest */,
 				BC03B9C91C1365F400DE2A99 /* CoreTetris.framework */,
 				BC03B9D21C1365F400DE2A99 /* CoreTetrisTests.xctest */,
+				BCB687CD1C1772DC00C77ACE /* tetris */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -211,6 +243,14 @@
 				BCB687A81C175C4F00C77ACE /* ColorTests.swift */,
 			);
 			path = CoreTetrisTests;
+			sourceTree = "<group>";
+		};
+		BCB687CE1C1772DC00C77ACE /* tetris-cli */ = {
+			isa = PBXGroup;
+			children = (
+				BCB687CF1C1772DC00C77ACE /* main.swift */,
+			);
+			path = "tetris-cli";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,6 +341,23 @@
 			productReference = BC03B9D21C1365F400DE2A99 /* CoreTetrisTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		BCB687CC1C1772DC00C77ACE /* tetris-cli */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCB687D11C1772DC00C77ACE /* Build configuration list for PBXNativeTarget "tetris-cli" */;
+			buildPhases = (
+				BCB687C91C1772DC00C77ACE /* Sources */,
+				BCB687CA1C1772DC00C77ACE /* Frameworks */,
+				BCB687CB1C1772DC00C77ACE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tetris-cli";
+			productName = "tetris-cli";
+			productReference = BCB687CD1C1772DC00C77ACE /* tetris */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -325,6 +382,9 @@
 						CreatedOnToolsVersion = 7.1.1;
 						TestTargetID = BC03B9A11C1365DD00DE2A99;
 					};
+					BCB687CC1C1772DC00C77ACE = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 				};
 			};
 			buildConfigurationList = BC03B99D1C1365DD00DE2A99 /* Build configuration list for PBXProject "Tetris" */;
@@ -344,6 +404,7 @@
 				BC03B9B41C1365DD00DE2A99 /* TetrisTests */,
 				BC03B9C81C1365F400DE2A99 /* CoreTetris */,
 				BC03B9D11C1365F400DE2A99 /* CoreTetrisTests */,
+				BCB687CC1C1772DC00C77ACE /* tetris-cli */,
 			);
 		};
 /* End PBXProject section */
@@ -423,6 +484,21 @@
 				BCB687A91C175C4F00C77ACE /* ColorTests.swift in Sources */,
 				BC03B9EA1C1381CE00DE2A99 /* TetriminoTests.swift in Sources */,
 				BCB687A31C14D5A700C77ACE /* MathTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCB687C91C1772DC00C77ACE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCB687D01C1772DC00C77ACE /* main.swift in Sources */,
+				BCB687DA1C1773EA00C77ACE /* GameState.swift in Sources */,
+				BCB687D81C1773E500C77ACE /* CustomStringConvertible.swift in Sources */,
+				BCB687DD1C1773F200C77ACE /* TetriminoGenerators.swift in Sources */,
+				BCB687DE1C1773F500C77ACE /* Globals.swift in Sources */,
+				BCB687D91C1773E700C77ACE /* Color.swift in Sources */,
+				BCB687DB1C1773EE00C77ACE /* Math.swift in Sources */,
+				BCB687DC1C1773F000C77ACE /* Tetrimino.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,6 +743,21 @@
 			};
 			name = Release;
 		};
+		BCB687D21C1772DC00C77ACE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				PRODUCT_NAME = tetris;
+			};
+			name = Debug;
+		};
+		BCB687D31C1772DC00C77ACE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = tetris;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -714,6 +805,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		BCB687D11C1772DC00C77ACE /* Build configuration list for PBXNativeTarget "tetris-cli" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCB687D21C1772DC00C77ACE /* Debug */,
+				BCB687D31C1772DC00C77ACE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
