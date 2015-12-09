@@ -1,11 +1,3 @@
-//
-//  CoreTetris.h
-//  CoreTetris
-//
-//  Created by Scott Perry on 12/05/15.
-//  Copyright © 2015 Scott Perry. All rights reserved.
-//
-
 #import <Cocoa/Cocoa.h>
 
 //! Project version number for CoreTetris.

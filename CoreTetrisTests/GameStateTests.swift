@@ -1,11 +1,3 @@
-//
-//  GameStateTests.swift
-//  Tetris
-//
-//  Created by Scott Perry on 12/06/15.
-//  Copyright © 2015 Scott Perry. All rights reserved.
-//
-
 import XCTest
 import CoreTetris
 

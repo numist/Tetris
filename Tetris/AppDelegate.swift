@@ -1,12 +1,3 @@
-//
-//  AppDelegate.swift
-//  Tetris
-//
-//  Created by Scott Perry on 12/05/15.
-//  Copyright (c) 2015 Scott Perry. All rights reserved.
-//
-
-
 import Cocoa
 import SpriteKit
 

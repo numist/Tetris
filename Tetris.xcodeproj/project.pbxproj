@@ -172,12 +172,12 @@
 		BC03B9991C1365DD00DE2A99 = {
 			isa = PBXGroup;
 			children = (
-				BCB687B71C17713100C77ACE /* libncurses.tbd */,
 				BC03B9A41C1365DD00DE2A99 /* Tetris */,
 				BC03B9B81C1365DD00DE2A99 /* TetrisTests */,
 				BC03B9CA1C1365F400DE2A99 /* CoreTetris */,
 				BC03B9D81C1365F400DE2A99 /* CoreTetrisTests */,
 				BCB687CE1C1772DC00C77ACE /* tetris-cli */,
+				BCB687DF1C17D7D700C77ACE /* Frameworks */,
 				BC03B9A31C1365DD00DE2A99 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -251,6 +251,14 @@
 				BCB687CF1C1772DC00C77ACE /* main.swift */,
 			);
 			path = "tetris-cli";
+			sourceTree = "<group>";
+		};
+		BCB687DF1C17D7D700C77ACE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCB687B71C17713100C77ACE /* libncurses.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
