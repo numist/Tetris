@@ -84,7 +84,7 @@ final public class FibonacciLinearFeedbackShiftRegister16: Copyable, RandomNumbe
         }
     }
     
-    public init(seed: UInt16, taps: [Int]) throws {
+    public init(seed: UInt16, taps: [Int] = [1,9]) throws {
         // All stored properties of a class instance must be initialized before throwing from an initializer
         // This is a bug in Swift: https://devforums.apple.com/thread/251388?start=0&tstart=0#1062922
         self.taps = taps

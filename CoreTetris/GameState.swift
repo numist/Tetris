@@ -137,11 +137,17 @@ public struct GameState {
             return newAccum
         }).filter({ return $1 == newPlayfield.width }).map({ $0.0 })
         
-        for rowNumber in completedRows {
-            newPlayfield = newPlayfield.remove(rowNumber)
-        }
-        
         if completedRows.count > 0 {
+            for rowNumber in completedRows.sort() {
+                newPlayfield = newPlayfield.remove(rowNumber)
+            }
+            
+            assert(newPlayfield.points.reduce([Int:Int](), combine: { accum, elem in
+                var newAccum = accum
+                newAccum[elem.y] = (newAccum[elem.y] ?? 0) + 1
+                return newAccum
+            }).filter({ return $1 == newPlayfield.width }).count == 0)
+
             switch self.gravity {
             case .Naïve: break
             }
@@ -241,13 +247,23 @@ public struct GameState {
         guard let activePiece = self.activePiece else {
             return self
         }
-        return with(activePiece - Int2D(x:1, y:0))
+        let newPiece = activePiece - Int2D(x:1, y:0)
+        if newPiece.points.filter({ $0.x < 0 }).count > 0 {
+            // New piece extends last the left edge of the playfield
+            return self
+        }
+        return with(newPiece)
     }
     
     public func movedRight() -> GameState {
         guard let activePiece = self.activePiece else {
             return self
         }
-        return with(activePiece + Int2D(x:1, y:0))
+        let newPiece = activePiece + Int2D(x:1, y:0)
+        if newPiece.points.filter({ $0.x >= playfield.width }).count > 0 {
+            // New piece extends last the right edge of the playfield
+            return self
+        }
+        return with(newPiece)
     }
 }
