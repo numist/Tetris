@@ -112,6 +112,8 @@ public struct GameState {
         self.activePiece = spawnPiece(generator.next(), width: self.playfield.width)
         self.generator = generator
         self.gravity = gravity
+        // RILF: computed properties with immutable dependencies should be automatically memoized
+        // RILF: lazy let
         self.ghostPiece = generateGhost(activePiece: self.activePiece, playfield: self.playfield)
     }
 
@@ -121,6 +123,8 @@ public struct GameState {
         self.generator = generator
         self.activePiece = activePiece
         self.gravity = gravity
+        // RILF: computed properties with immutable dependencies should be automatically memoized
+        // RILF: lazy let
         self.ghostPiece = generateGhost(activePiece: self.activePiece, playfield: self.playfield)
     }
     
@@ -172,7 +176,7 @@ public struct GameState {
             
             if newPoints.intersect(playfield.points).count > 0 {
                 // New piece intersects cells in the playfield
-                // TODO: floor kick?
+                // TODO: kick?
                 assertionFailure("Not implemented")
                 return self
             }
@@ -185,14 +189,14 @@ public struct GameState {
             }
             
             if newPoints.filter({ $0.x < 0 }).count > 0 {
-                // New piece extends last the left edge of the playfield
+                // New piece extends past the left edge of the playfield
                 // TODO: wall kick?
                 assertionFailure("Not implemented")
                 return self
             }
             
             if newPoints.filter({ $0.x >= playfield.width }).count > 0 {
-                // New piece extends last the right edge of the playfield
+                // New piece extends past the right edge of the playfield
                 // TODO: wall kick?
                 assertionFailure("Not implemented")
                 return self
@@ -248,8 +252,11 @@ public struct GameState {
             return self
         }
         let newPiece = activePiece - Int2D(x:1, y:0)
-        if newPiece.points.filter({ $0.x < 0 }).count > 0 {
-            // New piece extends last the left edge of the playfield
+        let newPoints = newPiece.points
+        if newPoints.filter({ $0.x < 0 }).count > 0 {
+            return self
+        }
+        if newPoints.intersect(playfield.points).count > 0 {
             return self
         }
         return with(newPiece)
@@ -260,8 +267,11 @@ public struct GameState {
             return self
         }
         let newPiece = activePiece + Int2D(x:1, y:0)
-        if newPiece.points.filter({ $0.x >= playfield.width }).count > 0 {
-            // New piece extends last the right edge of the playfield
+        let newPoints = newPiece.points
+        if newPoints.filter({ $0.x >= playfield.width }).count > 0 {
+            return self
+        }
+        if newPoints.intersect(playfield.points).count > 0 {
             return self
         }
         return with(newPiece)
