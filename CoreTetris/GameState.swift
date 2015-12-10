@@ -36,6 +36,18 @@ public struct Playfield {
         
         return Playfield(cells: newCells)
     }
+    
+    private func intersects(piece: GamePiece) -> Bool {
+        for point in piece.points {
+            if let _ = self.cells[point] {
+                return true
+            }
+            if point.x < 0 || point.x >= self.width || point.y >= self.height {
+                return true
+            }
+        }
+        return false
+    }
 }
 
 private func -(left: GamePiece, right: Int2D) -> GamePiece {
@@ -71,21 +83,20 @@ public struct GamePiece {
 }
 
 // TODO: preview window
+// TODO: smarter starting offsets
 private func spawnPiece(shape: TetriminoShape, width: Int) -> GamePiece {
-    return GamePiece(tetrimino: Tetrimino(shape: shape), position: Int2D(x:((width / 2) - 2), y:-2))
+    return GamePiece(tetrimino: Tetrimino(shape: shape), position: shape.initialPosition + Int2D(x:((width - 1) / 2), y:0))
 }
 
 private func generateGhost(activePiece activePiece: GamePiece?, playfield: Playfield) -> GamePiece? {
     guard var ghostPiece = activePiece else { return nil }
+    assert(!playfield.intersects(ghostPiece))
     
     // RILF: Expected 'while' after body of 'repeat' statement
     // repeat { // Infinite loop
     while true {
         ghostPiece = ghostPiece + Int2D(x:0, y:1)
-        let newPoints = ghostPiece.points
-        let intersectsPlayfield = newPoints.intersect(playfield.points).count > 0
-        let pastBottomOfPlayfield = newPoints.filter({ $0.y >= playfield.height }).count > 0
-        if intersectsPlayfield || pastBottomOfPlayfield {
+        if playfield.intersects(ghostPiece) {
             ghostPiece = ghostPiece - Int2D(x:0, y:1)
             break
         }
@@ -128,24 +139,28 @@ public struct GameState {
         self.ghostPiece = generateGhost(activePiece: self.activePiece, playfield: self.playfield)
     }
     
+    // TODO: Rename to lock
     private func bake() -> GameState {
         guard let activePiece = self.activePiece else {
             preconditionFailure()
         }
+        assert(activePiece == self.ghostPiece!)
         
         var newPlayfield = self.playfield.bake(activePiece)
         
+        // Completed rows are all rows that have `playfield.width` cells set
         let completedRows = newPlayfield.points.reduce([Int:Int](), combine: { accum, elem in
             var newAccum = accum
             newAccum[elem.y] = (newAccum[elem.y] ?? 0) + 1
             return newAccum
-        }).filter({ return $1 == newPlayfield.width }).map({ $0.0 })
+        }).filter({ return $1 == newPlayfield.width }).map({ $0.0 }).sort()
         
         if completedRows.count > 0 {
-            for rowNumber in completedRows.sort() {
+            for rowNumber in completedRows {
                 newPlayfield = newPlayfield.remove(rowNumber)
             }
             
+            // Regression assertion for a bug where unordered completedRows caused the wrong rows to be removed from playfield
             assert(newPlayfield.points.reduce([Int:Int](), combine: { accum, elem in
                 var newAccum = accum
                 newAccum[elem.y] = (newAccum[elem.y] ?? 0) + 1
@@ -159,7 +174,7 @@ public struct GameState {
         
         let newPiece = spawnPiece(self.generator.next(), width: newPlayfield.width)
         
-        if newPiece.points.intersect(newPlayfield.points).count > 0 {
+        if newPlayfield.intersects(newPiece) {
             return with(nil, newPlayfield: newPlayfield)
         }
         return with(newPiece, newPlayfield: newPlayfield)
@@ -172,54 +187,36 @@ public struct GameState {
         let score = newScore ?? self.score
         
         if let newPiece = activePiece {
-            let newPoints = newPiece.points
-            
-            if newPoints.intersect(playfield.points).count > 0 {
-                // New piece intersects cells in the playfield
-                // TODO: kick?
-                assertionFailure("Not implemented")
-                return self
-            }
-            
-            if newPoints.filter({ $0.y >= playfield.height }).count > 0 {
-                // New piece extends below the bottom of the playfield
-                // TODO: floor kick?
-                assertionFailure("Not implemented")
-                return self
-            }
-            
-            if newPoints.filter({ $0.x < 0 }).count > 0 {
-                // New piece extends past the left edge of the playfield
-                // TODO: wall kick?
-                assertionFailure("Not implemented")
-                return self
-            }
-            
-            if newPoints.filter({ $0.x >= playfield.width }).count > 0 {
-                // New piece extends past the right edge of the playfield
-                // TODO: wall kick?
-                assertionFailure("Not implemented")
-                return self
-            }
+            assert(!playfield.intersects(newPiece))
         }
         
         return GameState(score: score, playfield: playfield, generator: self.generator.copy(), activePiece: activePiece, gravity: self.gravity)
     }
     
-    public func rotatedCW() -> GameState {
+    // TODO: 180° support?
+    public func rotated(clockwise clockwise: Bool) -> GameState {
         guard let activePiece = self.activePiece else {
             return self
         }
         
-        return self.with(activePiece.with(tetrimino: activePiece.tetrimino.rotated(true)))
-    }
-    
-    public func rotatedCCW() -> GameState {
-        guard let activePiece = self.activePiece else {
+        let basePiece = activePiece.with(tetrimino: activePiece.tetrimino.rotated(clockwise))
+        var newPiece: GamePiece? = nil
+        do {
+            var index = 0
+            repeat {
+                guard let originalOffset = activePiece.tetrimino.offset(index), newOffset = basePiece.tetrimino.offset(index) else {
+                    break
+                }
+                let kickTranslation = originalOffset - newOffset
+                newPiece = basePiece + kickTranslation
+                index += 1
+            } while playfield.intersects(newPiece!)
+        }
+        
+        if newPiece == nil || playfield.intersects(newPiece!) {
             return self
         }
-
-        return self.with(activePiece.with(tetrimino: activePiece.tetrimino.rotated(false)))
+        return self.with(newPiece)
     }
     
     public func withHardDrop() -> GameState {
@@ -229,6 +226,7 @@ public struct GameState {
         }
         
         // TODO: do hard drops add to the score?
+        // Yes, and so do soft drops. Score should probably not be part of GameState since it also depends on level.
         return with(newPiece).bake()
     }
     
@@ -242,8 +240,7 @@ public struct GameState {
         }
         
         let newPiece = activePiece + Int2D(x:0, y:1)
-        assert(newPiece.points.intersect(self.playfield.points).count == 0)
-        assert(newPiece.points.filter({ $0.y >= self.playfield.height }).count == 0)
+        assert(!playfield.intersects(newPiece))
         return with(newPiece)
     }
     
@@ -252,11 +249,7 @@ public struct GameState {
             return self
         }
         let newPiece = activePiece - Int2D(x:1, y:0)
-        let newPoints = newPiece.points
-        if newPoints.filter({ $0.x < 0 }).count > 0 {
-            return self
-        }
-        if newPoints.intersect(playfield.points).count > 0 {
+        if playfield.intersects(newPiece) {
             return self
         }
         return with(newPiece)
@@ -267,11 +260,7 @@ public struct GameState {
             return self
         }
         let newPiece = activePiece + Int2D(x:1, y:0)
-        let newPoints = newPiece.points
-        if newPoints.filter({ $0.x >= playfield.width }).count > 0 {
-            return self
-        }
-        if newPoints.intersect(playfield.points).count > 0 {
+        if playfield.intersects(newPiece) {
             return self
         }
         return with(newPiece)

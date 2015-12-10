@@ -53,11 +53,11 @@ class GameStateTests: XCTestCase {
         XCTAssertEqual(score, state.score)
         score = state.score
         
-        state = state.rotatedCCW()
+        state = state.rotated(clockwise: false)
         XCTAssertEqual(score, state.score)
         score = state.score
         
-        state = state.rotatedCW()
+        state = state.rotated(clockwise: true)
         XCTAssertEqual(score, state.score)
         score = state.score
         
@@ -150,9 +150,9 @@ class GameStateTests: XCTestCase {
         let testGenerator = TestGenerator(list: [.T])
         let state = GameState(generator: testGenerator).movedDown().movedDown()
         
-        print(state.rotatedCW())
+        print(state.rotated(clockwise: true))
         
-        XCTAssertEqual(Set([Int2D(x: 3, y: 1), Int2D(x: 5, y: 1), Int2D(x: 4, y: 2), Int2D(x: 4, y: 1)]), state.rotatedCCW().rotatedCCW().activePiece?.points)
+        XCTAssertEqual(Set([Int2D(x: 3, y: 1), Int2D(x: 5, y: 1), Int2D(x: 4, y: 2), Int2D(x: 4, y: 1)]), state.rotated(clockwise: false).rotated(clockwise: false).activePiece?.points)
     }
     
     func testRowRemovalOrdering() {
@@ -167,15 +167,15 @@ class GameStateTests: XCTestCase {
         var state = GameState(generator: testGenerator)
         
         // .J
-        state = state.rotatedCCW().movedLeft().movedLeft().movedLeft().withHardDrop()
+        state = state.rotated(clockwise: false).movedLeft().movedLeft().movedLeft().withHardDrop()
         // .Z
-        state = state.rotatedCCW().movedLeft().movedLeft().movedLeft().withHardDrop()
+        state = state.rotated(clockwise: false).movedLeft().movedLeft().movedLeft().withHardDrop()
         // .O
         state = state.movedLeft().movedLeft().withHardDrop()
         // .O
         state = state.movedLeft().movedLeft().withHardDrop()
         // .I
-        state = state.rotatedCCW().withHardDrop()
+        state = state.rotated(clockwise: false).withHardDrop()
         // .O
         state = state.movedRight().withHardDrop()
         // .O
@@ -185,7 +185,7 @@ class GameStateTests: XCTestCase {
         // .O
         state = state.movedRight().movedRight().movedRight().movedRight().withHardDrop()
         // .I
-        state = state.rotatedCW().movedRight().movedRight().withHardDrop()
+        state = state.rotated(clockwise: true).movedRight().movedRight().withHardDrop()
         
         // A bug caused line clearing to leave full lines behind.
         // Expected output:
@@ -195,4 +195,23 @@ class GameStateTests: XCTestCase {
         // +----------+
         XCTAssertEqual(Set([Int2D(x:8, y:19), Int2D(x:2, y:19), Int2D(x:1, y:19), Int2D(x:5, y:19), Int2D(x:7, y:19), Int2D(x:1, y:18), Int2D(x:4, y:19), Int2D(x:3, y:19), Int2D(x:6, y:19), Int2D(x:9, y:19)]), state.playfield.points)
     }
+    
+    func testMovePastEdges() {
+        let testGenerator = TestGenerator(list: [.I,.I,.O])
+        var state = GameState(generator: testGenerator)
+        
+        // .I
+        state = state.movedLeft().movedLeft().movedLeft().movedLeft().withHardDrop()
+        // .I
+        state = state.movedRight().movedRight().movedRight().movedRight().withHardDrop()
+        // .O
+        state = state.withHardDrop()
+        
+        // |          |
+        // |    OO    |
+        // +----------+
+        XCTAssertEqual(Set([Int2D(x: 5, y: 19), Int2D(x: 4, y: 19)]), state.playfield.points)
+    }
+    
+    // TODO: Piece spin tests
 }

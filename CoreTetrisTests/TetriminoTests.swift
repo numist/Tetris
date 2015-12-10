@@ -12,7 +12,7 @@ class TetriminoTests: XCTestCase {
     
     func testPrintingTetriminos() {
         for tetriminoShape in TetriminoShape.allValues {
-            var lines = [String?](count: 6, repeatedValue: nil)
+            var lines = [String?](count: 7, repeatedValue: nil)
             for i in 0..<4 {
                 let shapeLines = Tetrimino(shape: tetriminoShape, rotation: i).description.componentsSeparatedByString("\n")
                 for i in 0..<shapeLines.count {

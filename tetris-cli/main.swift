@@ -47,10 +47,10 @@ repeat {
         state = state.movedRight()
         draw()
     case Int32.Q:
-        state = state.rotatedCCW()
+        state = state.rotated(clockwise: false)
         draw()
     case Int32.E:
-        state = state.rotatedCW()
+        state = state.rotated(clockwise: true)
         draw()
     case Int32.Esc:
         runloop = false

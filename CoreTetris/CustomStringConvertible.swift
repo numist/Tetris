@@ -5,10 +5,8 @@ extension Tetrimino: CustomStringConvertible {
         
         switch self.shape {
         case .I:
-            coordinates = [[Bool]](count:4, repeatedValue:[Bool](count:4, repeatedValue:false))
-        case .O:
-            coordinates = [[Bool]](count:3, repeatedValue:[Bool](count:4, repeatedValue:false))
-        case .T, .J, .L, .S, .Z:
+            coordinates = [[Bool]](count:5, repeatedValue:[Bool](count:5, repeatedValue:false))
+        case .T, .J, .L, .S, .Z, .O:
             coordinates = [[Bool]](count:3, repeatedValue:[Bool](count:3, repeatedValue:false))
         }
         
